@@ -104,7 +104,105 @@
 \setlength{\belowdisplayshortskip}{0pt}
 
 \begin{multicols*}{5}
-111
+\cheatsection{2.1 OS Objectives and Functions}
+\cheatsubsection{Definition}
+\term{Operating system}: a program that controls application execution and acts as an interface between applications and computer hardware.
+
+\cheatsubsection{Three Objectives}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Convenience} & makes the computer easier to use.\\
+\term{Efficiency} & uses CPU, memory, I/O, files, storage, and network resources efficiently.\\
+\term{Evolution} & permits new functions, tests, fixes, and hardware support without disrupting service.\\
+\bottomrule
+\end{tabularx}
+
+\cheatsubsection{Two Main Roles}
+\begin{itemize}
+  \item \term{User/computer interface}: hides hardware details and provides usable services.
+  \item \term{Resource manager}: allocates processor, memory, I/O devices, files, storage, and network resources.
+\end{itemize}
+
+\cheatsubsection{OS Services}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Program development} & editors, debuggers, compilers, libraries.\\
+\term{Program execution} & loads code/data, initializes files, I/O, and resources.\\
+\term{I/O access} & uniform device interface, e.g. \code{read()}, \code{write()}.\\
+\term{File access} & file organization, permissions, protection.\\
+\term{System access} & login, authorization, resource contention control.\\
+\term{Error handling} & detect hardware/software errors; terminate, retry, or report.\\
+\term{Accounting} & collect usage/performance data; support billing and tuning.\\
+\bottomrule
+\end{tabularx}
+
+\cheatsubsection{Interfaces: ISA vs ABI vs API}
+\begin{tabularx}{\linewidth}{@{}lYY@{}}
+\toprule
+\term{ISA} & CPU instruction set & hardware/software boundary; user ISA vs system ISA.\\
+\term{ABI} & binary compatibility & system-call interface, registers, calling convention, binary format.\\
+\term{API} & source-level calls & library functions used by programmers, e.g. \code{open()}, \code{malloc()}.\\
+\bottomrule
+\end{tabularx}
+\note{Memory hook: API = coding; ABI = compiled binary execution; ISA = CPU instructions.}
+
+\cheatsection{Kernel, Control, Evolution}
+\cheatsubsection{Kernel / Nucleus}
+\term{Kernel}: central OS part, normally resident in main memory, containing the most frequently used OS functions: process, memory, I/O, file, interrupt, and system-call handling.
+
+\cheatsubsection{How the OS Controls the CPU}
+The OS is also software. It gains control, schedules and allocates resources, gives control to user programs, then regains control through interrupts, system calls, or exceptions.
+
+\cheatsubsection{Why OSs Must Evolve}
+\begin{itemize}
+  \item \term{Hardware upgrades}: new processors/devices require new support.
+  \item \term{New services}: users and administrators need new tools and features.
+  \item \term{Fixes}: bugs must be repaired without destabilizing old services.
+\end{itemize}
+
+\cheatsection{System Calls and Modes}
+\cheatsubsection{System Calls}
+\term{System call}: controlled entry point for a user program to request OS services such as file I/O, process creation, memory allocation, communication, and protection.
+
+\cheatsubsection{Dual-Mode Operation}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{User mode} & low privilege; applications cannot directly execute privileged instructions.\\
+\term{Kernel mode} & high privilege; OS kernel performs protected operations.\\
+\bottomrule
+\end{tabularx}
+\note{Flow: a user program requests a system call/trap; the kernel performs the service and returns to user mode.}
+
+\cheatsection{Exam Questions}
+\cheatsubsection{Review 2.1}
+\term{Q}: What are three objectives of an OS design?\\
+\term{A}: Convenience, efficiency, and ability to evolve.
+
+\cheatsubsection{Review 2.2}
+\term{Q}: What is the kernel of an OS?\\
+\term{A}: The core OS part, usually resident in main memory, containing the most frequently used OS functions.
+
+\cheatsubsection{Problem 2.4}
+\term{Q}: What is the purpose of system calls, and how do they relate to dual-mode operation?\\
+\term{A}: System calls let user programs request OS services safely. They transfer control from user mode to kernel mode so the OS can perform privileged operations, then return control to the user program.
+
+\cheatsubsection{Problem 2.5}
+\term{Q}: Why might SRM check whether page frames are referenced or changed?\\
+\term{A}: To measure real-memory activity. Long-untouched frames are good replacement or reallocation candidates; frequently touched frames indicate memory pressure or possible thrashing, so SRM may reduce multiprogramming, swap out address spaces, or adjust memory allocation.
+
+\cheatsubsection{Review 2.6}
+\term{Q}: List five storage-management responsibilities of a typical OS.\\
+\term{A}: Process isolation; automatic allocation and management; modular-program support; protection and access control; long-term storage management.
+
+\cheatsection{Fast Recall}
+\begin{itemize}
+  \item OS = application controller + hardware interface + resource manager.
+  \item OS hides hardware details behind services and interfaces.
+  \item Important services: development, execution, I/O, files, access control, errors, accounting.
+  \item Kernel holds common privileged OS functions in memory.
+  \item System calls are the legal bridge from user mode to kernel mode.
+  \item Evolution needs modular design, clear interfaces, and maintainability.
+\end{itemize}
 
 
 
