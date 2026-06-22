@@ -455,7 +455,7 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 \cheatsection{5 Concurrency and Semaphores}
 \cheatsubsection{Concurrency Basics}
 \term{Concurrency}: multiple processes or threads make progress in the same time interval. On one CPU execution is interleaved; on many CPUs it may overlap in parallel.\\
-\term{Main hazards}: shared global resources, hard resource allocation, and nondeterministic bugs.\\
+\term{Main hazards}: shared global resources, hard resource allocation, and nondeterministic bugs(program hard to reproduce).\\
 \term{Race condition}: final result depends on timing of unsynchronized shared read/write.\\
 \term{Critical section}: code that accesses a shared resource. \term{Mutual exclusion}: at most one process may execute the corresponding critical section for the same resource.
 
@@ -530,6 +530,153 @@ The OS is also software. It gains control, schedules and allocates resources, gi
   \item P/down may block; V/up may wake zero or one waiter.
   \item Semaphore waits before mutex waits in producer/consumer resource tests.
   \item Strong semaphore fairness comes from FIFO; weak semaphore may starve.
+\end{itemize}
+
+\cheatsection{6 Deadlock and Starvation}
+\cheatsubsection{Resources and Deadlock Conditions}
+\term{Reusable resource}: not depleted by use; released and used again, e.g., CPU, memory, files, devices, semaphores.\\
+\term{Consumable resource}: produced and consumed; after use it is gone, e.g., messages, signals, interrupts, buffer information.\\
+\term{Deadlock}: processes are permanently blocked because each waits for an event/resource held by another process. \term{Starvation}: a ready/requesting process waits indefinitely because others keep being favored.
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Mutual exclusion} & resource can be held by only one process.\\
+\term{Hold and wait} & process holds resources while requesting more.\\
+\term{No preemption} & resource cannot be forcibly taken away.\\
+\term{Circular wait} & closed chain: each process waits for a resource held by the next.\\
+\bottomrule
+\end{tabularx}
+\note{First three conditions make deadlock possible; adding circular wait creates deadlock.}
+
+\cheatsubsection{Handling Strategies}
+\term{Prevention}: make at least one deadlock condition impossible. Examples: request all resources at once, allow preemption where safe, or impose a global resource order.\\
+\term{Avoidance}: grant a request only if the resulting state is safe. Needs each process's maximum claim.\\
+\term{Detection}: grant resources more freely, periodically test the current state, then recover by aborting, rollback, or preemption.
+
+\cheatsubsection{Banker's Algorithm}
+\[
+\mathrm{Need}=\mathrm{Claim}-\mathrm{Allocation}
+\]
+For request \(R_i\): require \(R_i\le Need_i\) and \(R_i\le Available\); pretend to allocate; grant only if a safe sequence exists.\\
+\term{Safe state}: some process completion order can satisfy all remaining needs. \term{Unsafe state}: no guaranteed safe sequence; deadlock may occur but has not necessarily occurred.
+
+\cheatsubsection{Avoidance vs Detection}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Avoidance} & before allocation; uses Claim/Max, Allocation, Available; tests \(Need_i\le Available\); failure means unsafe.\\
+\term{Detection} & after allocation; uses Request \(Q\), Allocation, Available; tests \(Q_i\le W\); unmarked at end means deadlocked.\\
+\bottomrule
+\end{tabularx}
+\term{Detection sketch}: set \(W=Available\); mark processes with zero allocation; repeatedly find unmarked \(Q_i\le W\), mark it, set \(W=W+A_i\). Remaining unmarked processes are deadlocked.
+
+\cheatsection{Chapter 6 Review Q\&A}
+\begin{stemlist}
+\stemrow{R6.1 Resource examples}{Stem: reusable vs consumable resources. A: reusable: CPU, memory, files, devices, semaphores; consumable: messages, signals, interrupts, buffer data.}
+\stemrow{R6.2 Possible deadlock}{Stem: three conditions for deadlock possibility. A: mutual exclusion, hold and wait, no preemption.}
+\stemrow{R6.3 Actual deadlock}{Stem: four deadlock conditions. A: mutual exclusion, hold and wait, no preemption, circular wait.}
+\stemrow{R6.4 Prevent hold-wait}{Stem: hold-and-wait prevention. A: require a process to request all needed resources at once, or release held resources before requesting more.}
+\stemrow{R6.5 Prevent no-preempt}{Stem: two no-preemption attacks. A: if a request fails, release held resources and retry; or preempt resources from another holder when state can be restored.}
+\stemrow{R6.6 Prevent circular wait}{Stem: circular-wait prevention. A: impose a total order on resource types and request only in increasing order.}
+\stemrow{R6.7 Three strategies}{Stem: prevention vs avoidance vs detection. A: prevention breaks a condition; avoidance refuses unsafe grants; detection finds existing deadlocks and recovers.}
+\end{stemlist}
+
+\cheatsection{Chapter 6 Problem Q\&A}
+\begin{stemlist}
+\stemrow{P6.1 Traffic deadlock}{Stem: show four conditions in Fig. 6.1a. A: each road quadrant is exclusive; cars hold one quadrant while waiting; cars cannot be preempted; cars wait in a cycle.}
+\stemrow{P6.2 Apply strategies}{Stem: prevention/avoidance/detection for Fig. 6.1. A: traffic lights/order break circular wait; controller allows only safe entry; detection notices blocked cycle and backs/removes one car.}
+\stemrow{P6.3 Six paths}{Stem: narrate Fig. 6.3 paths. A: Q-first, P-then-Q, mixed Q-holds-B/P-releases-A, mixed after A release, P-holds-B/Q-waits, or P-first; all avoid a fatal region.}
+\stemrow{P6.4 No deadlock}{Stem: justify Fig. 6.3. A: P releases A before requesting B; Q may hold B and wait for A, but P does not hold A while waiting for B, so no circular wait.}
+\stemrow{P6.5 Banker state}{Stem: verify, need, safe sequence, P5 request. A: allocated total 9346, so Available 6354. Need rows: P0 7534, P1 2122, P2 3442, P3 2331, P4 4121, P5 3433. Safe order: P1,P2,P0,P3,P4,P5. Granting P5 3233 leaves 3121 and no process can finish; deny.}
+\par\vspace{1pt}\noindent
+\begin{tabular}{@{}c@{\hspace{1pt}}c@{}}
+\includegraphics[width=0.49\linewidth]{chapter6-rag-requested.png} &
+\includegraphics[width=0.49\linewidth]{chapter6-rag-held.png}\\[-1pt]
+\includegraphics[width=0.49\linewidth]{chapter6-rag-circular-wait.png} &
+\includegraphics[width=0.49\linewidth]{chapter6-rag-no-deadlock.png}
+\end{tabular}
+\par\vspace{1pt}
+\stemrow{P6.6 RAG/order}{Stem: code with P0 A,B,C; P1 D,E,B; P2 C,F,D. A: deadlock cycle P0 waits C held by P2; P2 waits D held by P1; P1 waits B held by P0. Prevent by global order A<B<C<D<E<F: P0 A,B,C; P1 B,D,E; P2 C,D,F.}
+\stemrow{P6.11 Memory banker}{Stem: total 150, P1 70/45, P2 60/40, P3 60/15; add P4. A: initial Available \(=50\). P4 hold 25 gives Available 25 and safe order P1,P2,P3,P4; grant. P4 hold 35 gives Available 15 and no need fits; deny.}
+\stemrow{P6.12 Banker usefulness}{Stem: evaluate banker's algorithm in an OS. A: good theory and predictable-resource systems; often impractical because max claims must be known, resources/processes vary, each request costs a safety test, and concurrency may be reduced.}
+\stemrow{P6.15 Min available}{Stem: one resource, \(C=(3,2,9,7)\), \(A=(1,1,3,2)\). A: Need \(=(2,1,6,5)\); minimum Available is 3, e.g., P2,P1,P4,P3.}
+\stemrow{P6.16 Rankings}{Stem: compare six deadlock methods by concurrency and efficiency. A: concurrency high to low: detect+kill, detect+rollback, banker, ordering, restart-on-wait, reserve-all. Rare-deadlock efficiency: ordering, reserve-all, detect+kill, restart-on-wait, banker, detect+rollback; if deadlocks are frequent, detection recovery becomes less attractive.}
+\end{stemlist}
+
+\cheatsection{Chapter 6 Fast Recall}
+\begin{itemize}
+  \item Prevention breaks conditions; avoidance checks future safety; detection checks current deadlock.
+  \item Unsafe does not mean deadlocked; it means no guaranteed safe completion order.
+  \item Banker's core loop: find \(Need_i\le Available\), finish \(P_i\), then add back \(Allocation_i\).
+  \item Detection core loop uses current requests \(Q_i\), not maximum claims.
+  \item Global resource ordering prevents circular wait but can reduce flexibility.
+\end{itemize}
+
+\cheatsection{7 Memory Management}
+\cheatsubsection{Requirements and Addresses}
+\term{Memory management}: allocates main memory among active processes and supports efficient multiprogramming.\\
+\term{Requirements}: relocation, protection, sharing, logical organization, and physical organization.\\
+\term{Logical address}: program-visible address. \term{Relative address}: logical offset from a known point. \term{Physical address}: real main-memory address.\\
+\term{Dynamic relocation}: hardware maps relative to physical address, commonly \(physical=base+relative\); bounds/limit checks enforce protection.
+
+\cheatsubsection{Partitioning}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Fixed partitioning} & memory split at system generation; simple; causes internal fragmentation and limits active processes.\\
+\term{Dynamic partitioning} & allocate exactly requested size; no internal fragmentation; causes external fragmentation and may need compaction.\\
+\term{First-fit} & first large enough hole; usually fast and good.\\
+\term{Next-fit} & resume search from last placement; often uses later holes.\\
+\term{Best-fit} & smallest large enough hole; often leaves many tiny holes.\\
+\bottomrule
+\end{tabularx}
+\term{Internal fragmentation}: wasted space inside an allocated block. \term{External fragmentation}: free space split into noncontiguous holes.
+
+\cheatsubsection{Buddy System and Paging}
+\term{Buddy system}: block sizes are powers of two; split on allocation and coalesce free buddies on release. Buddy address: \(buddy_k(x)=x\oplus2^k\).\\
+\term{Paging}: process logical space is split into fixed-size pages; physical memory is split into same-size frames. Pages need not be contiguous.\\
+\term{Page table}: maps page number to frame number. Logical address \(=(page,offset)\); physical address \(=(frame,offset)\).
+\[
+p=\lfloor a/s\rfloor,\quad d=a\bmod s,\quad PA=f\times s+d
+\]
+\note{Paging has no external fragmentation; only the last page may have internal fragmentation.}
+
+\cheatsection{Chapter 7 Review Q\&A}
+\begin{stemlist}
+\stemrow{R7.1 Requirements}{Stem: memory-management requirements. A: relocation, protection, sharing, logical organization, physical organization.}
+\stemrow{R7.2 Relocation}{Stem: why relocation is desirable. A: processes can be loaded, swapped, or compacted into different physical locations without changing program addresses.}
+\stemrow{R7.3 Compile protection}{Stem: why protection cannot be enforced at compile time. A: final physical locations, sharing, and relocation are run-time facts, so run-time checks are needed.}
+\stemrow{R7.4 Sharing}{Stem: why share memory regions. A: shared libraries/code, shared data, IPC, common files/buffers, and memory savings.}
+\stemrow{R7.5 Unequal fixed partitions}{Stem: advantages. A: better match to process sizes, less internal waste, and support for both small and larger processes.}
+\stemrow{R7.6 Fragmentation}{Stem: internal vs external. A: internal is unused space inside an allocation; external is separated free holes outside allocations.}
+\stemrow{R7.7 Address types}{Stem: logical/relative/physical. A: logical is program-visible; relative is an offset; physical is the real main-memory location.}
+\stemrow{R7.8 Page/frame}{Stem: difference. A: a page is a fixed-size logical-process block; a frame is the same-size physical-memory block.}
+\stemrow{R7.9 Page/segment}{Stem: difference. A: pages are fixed-size and system-managed; segments are variable-size logical units such as code, data, or stack.}
+\end{stemlist}
+
+\cheatsection{Chapter 7 Problem Q\&A}
+\begin{stemlist}
+\stemrow{P7.1 Objectives}{Stem: Section 2.3 objectives vs Section 7.1 requirements. A: isolation/protection, allocation/relocation, modularity/logical organization, access control/sharing, and storage hierarchy/physical organization cover the same concerns.}
+\stemrow{P7.2 Partition pointer}{Stem: \(2^{16}\)-byte partitions in \(2^{24}\)-byte memory. A: \(2^{24}/2^{16}=2^8\) partitions, so pointer needs 8 bits.}
+\stemrow{P7.3 50 percent rule}{Stem: holes vs segments in dynamic partitioning. A: in equilibrium, random deletion/allocation gives about one hole per two allocated segments, so holes \(\approx n/2\).}
+\stemrow{P7.4 Search length}{Stem: average free-list search. A: best-fit checks all holes unless size-sorted; first-fit and next-fit scan roughly half the list on average.}
+\stemrow{P7.5 Worst-fit}{Stem: largest hole placement. A: may avoid tiny leftovers but destroys large holes; search is full list unless kept largest-first.}
+\stemrow{P7.6 Diagram}{Stem: X is last 2 MB placement; then one swap-out. A: under low-address splitting, swapped-out max \(=1\) MB; X split a 7 MB hole; next 3 MB: best-fit exact 3 MB hole, first-fit first 4 MB hole, next-fit 5 MB hole after X, worst-fit 8 MB hole.}
+\stemrow{P7.7 Buddy sequence}{Stem: 1 MiB buddy requests 70,35,80; returns A; request 60; returns B,D,C. A: A=128 KiB, B=64 KiB, C=128 KiB, D=64 KiB; after Return B: free A128, free B64, used D64, used C128, free 128, free 512; final all coalesces to 1 MiB free.}
+\stemrow{P7.8 Buddy address}{Stem: block address \code{011011110000}. A: size 4 buddy \code{011011110100}; size 16 buddy \code{011011100000}.}
+\stemrow{P7.9 Buddy formula}{Stem: general buddy expression. A: \(buddy_k(x)=x\oplus2^k\); equivalently flip bit \(k\).}
+\stemrow{P7.10 Fibonacci buddy}{Stem: use Fibonacci sizes. A: yes; split \(F_{n+2}\) into \(F_{n+1}\) and \(F_n\). Advantage: less internal fragmentation; cost: harder buddy management.}
+\stemrow{P7.11 PC address}{Stem: relative vs absolute PC. A: relative PC is preferable because saved execution state remains relocation-independent; hardware translates on fetch.}
+\stemrow{P7.12 Paging bits}{Stem: \(2^{32}\) physical bytes, page \(2^{10}\), \(2^{16}\) logical pages. A: logical address 26 bits; frame 1024 bytes; frame field 22 bits; table \(2^{16}\) entries; PTE 23 bits with valid bit.}
+\stemrow{P7.13 Translate}{Stem: logical \code{0001010010111010}. A: paging: page 20, offset 186, frame 5 gives \code{0000010110111010}. Segmentation: seg 5, offset 186, base \(4+4096\times5\), physical \(20670\) = \code{0101000010111110}.}
+\stemrow{P7.14 Seg table}{Stem: translate \((seg,offset)\). A: (0,198)\(\to858\); (2,156)\(\to378\); (1,530)\(\to\)fault; (3,444)\(\to1440\); (0,222)\(\to882\).}
+\stemrow{P7.15 Compaction}{Stem: compaction fraction. A: \(F\ge(1-f)/(1+kf)\), \(k=t/(2s)-1\). For \(f=.2,t=1000,s=50\), \(k=9\), so \(F\ge0.8/2.8\approx0.286\).}
+\end{stemlist}
+
+\cheatsection{Chapter 7 Fast Recall}
+\begin{itemize}
+  \item Fixed partitions waste inside; dynamic partitions waste between holes.
+  \item Compaction fights external fragmentation but costs CPU and needs relocation.
+  \item Buddy allocation rounds up to a power of two, splits downward, and coalesces upward.
+  \item Paging maps page number to frame number; the offset is copied unchanged.
+  \item Simple paging requires all pages resident; virtual-memory paging can load pages on demand.
 \end{itemize}
 
 \end{multicols*}

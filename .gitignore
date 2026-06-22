@@ -10,4 +10,5 @@
 !*.pdf
 !chapter3-seven-state.png
 !chapter3-seven-state.svg
+!chapter6-rag-*.png
 !.gitignore
