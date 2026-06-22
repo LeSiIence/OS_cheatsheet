@@ -26,10 +26,10 @@
 \definecolor{rulegray}{HTML}{D1D5DB}
 \definecolor{codebg}{HTML}{F8FAFC}
 
-\newcommand{\cheatbodyfont}{\fontsize{7.2pt}{7.7pt}\selectfont}
-\newcommand{\cheatsectionfont}{\fontsize{8.2pt}{8.6pt}\selectfont}
-\newcommand{\cheatsubsectionfont}{\fontsize{7.4pt}{7.8pt}\selectfont}
-\newcommand{\cheattinyfont}{\fontsize{6.4pt}{6.8pt}\selectfont}
+\newcommand{\cheatbodyfont}{\fontsize{7.8pt}{8.4pt}\selectfont}
+\newcommand{\cheatsectionfont}{\fontsize{8.8pt}{9.3pt}\selectfont}
+\newcommand{\cheatsubsectionfont}{\fontsize{8.0pt}{8.6pt}\selectfont}
+\newcommand{\cheattinyfont}{\fontsize{6.9pt}{7.4pt}\selectfont}
 
 \pagestyle{empty}
 
@@ -92,7 +92,7 @@
   \par
   \endgroup
 }
-\newcommand{\stemrow}[2]{\par\noindent\term{#1}: #2\par}
+\newcommand{\stemrow}[3][]{\par\noindent\term[#1]{#2}: #3\par}
 
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{T}{>{\raggedright\arraybackslash}p{0.34\linewidth}}
@@ -121,7 +121,7 @@
 \setlength{\abovedisplayshortskip}{0pt}
 \setlength{\belowdisplayshortskip}{0pt}
 
-\begin{multicols*}{5}
+\begin{multicols*}{4}
 \cheatsection{0 Quick Index / 快速索引}
 \begin{stemlist}
 \term[总览/中断/缓存]{Ch1}: CPU registers, interrupts, memory hierarchy, cache, DMA.\\
@@ -206,35 +206,35 @@ C_{\mathrm{avg}}=\sum C_iS_i/\sum S_i
 
 \cheatsection{Chapter 1 Exam Questions}
 \cheatsubsection{Review 1.1--1.10}
-\term{Q}: List the four main computer elements.\\
-\term{A}: Processor, main memory, I/O modules, system bus.\\
-\term{Q}: Define the two register categories.\\
-\term{A}: User-visible registers; control and status registers.\\
-\term{Q}: What is an interrupt?\\
-\term{A}: A mechanism that lets another module interrupt normal CPU execution so an ISR can handle the event.\\
-\term{Q}: How are multiple interrupts handled?\\
-\term{A}: Sequential processing disables interrupts during ISR; nested processing uses priorities.\\
-\term{Q}: What distinguishes memory hierarchy levels?\\
-\term{A}: Capacity, access time, cost per bit, and access frequency.\\
-\term{Q}: Multiprocessor vs multicore?\\
-\term{A}: Multiprocessor has multiple processors; multicore has multiple cores on one chip.
+\term[四大部件]{Q}: List the four main computer elements.\\
+\term[CPU/内存/I/O/总线]{A}: Processor, main memory, I/O modules, system bus.\\
+\term[寄存器分类]{Q}: Define the two register categories.\\
+\term[用户可见+控制状态]{A}: User-visible registers; control and status registers.\\
+\term[中断定义]{Q}: What is an interrupt?\\
+\term[事件打断CPU转ISR]{A}: A mechanism that lets another module interrupt normal CPU execution so an ISR can handle the event.\\
+\term[多中断处理]{Q}: How are multiple interrupts handled?\\
+\term[顺序或嵌套]{A}: Sequential processing disables interrupts during ISR; nested processing uses priorities.\\
+\term[存储层次指标]{Q}: What distinguishes memory hierarchy levels?\\
+\term[容量/时间/成本/频率]{A}: Capacity, access time, cost per bit, and access frequency.\\
+\term[多处理器vs多核]{Q}: Multiprocessor vs multicore?\\
+\term[多个CPU vs 单芯片多核]{A}: Multiprocessor has multiple processors; multicore has multiple cores on one chip.
 
 \cheatsubsection{Problem Stems and Answers}
 \begin{stemlist}
-\stemrow{1.1 I/O program}{Load dev5, add M[940], store dev6: dev6 receives \code{0005}.}
-\stemrow{1.2 MAR/MBR}{Expand Fig. 1.4 execution: fetch via MAR/MBR; final M[941] = \code{0005}.}
-\stemrow{1.3 32-bit instr.}{24-bit address field gives 16 MB; PC = 24 bits, IR = 32 bits.}
-\stemrow{1.4 16-bit addr.}{16-bit memory: 128 KiB; 8-bit memory: 64 KiB; 8-bit port number: 256 ports.}
-\stemrow{1.5 bus rate}{8 MHz, 16-bit bus, 4 clocks/bus cycle gives 4 MB/s; wider bus or doubled clock gives 8 MB/s.}
-\stemrow{1.6 Teletype I/O}{FGI/FGO polling wastes CPU; IEN enables interrupt-driven I/O.}
-\stemrow{1.7 DMA priority}{DMA gets memory priority because device delay may lose data; CPU delay mostly slows execution.}
-\stemrow{1.8 DMA slowdown}{9600 bps DMA slows 1 MIPS CPU by about 0.12\%.}
-\stemrow{1.9 I/O rate}{Programmed I/O = 25,000 words/s; DMA = \(2.15\times10^6\) words/s.}
-\stemrow{1.10 locality code}{Spatial: sequential \code{a[i]}; temporal: repeated same \code{a[i]} in inner loop.}
-\stemrow{1.11 n-level memory}{Use \(T_{\mathrm{avg}}=\sum_i(\prod_{j<i}(1-H_j))T_i\), \(C_{\mathrm{avg}}=\sum C_iS_i/\sum S_i\).}
-\stemrow{1.12 cost/hit}{Main memory \(\approx \$83.89\); cache-tech \(\approx \$838.86\); \(H\approx99.17\%\).}
-\stemrow{1.13 cache/disk}{Average access time \(\approx480{,}026\) ns.}
-\stemrow{1.14 stack PC}{No; the PC cannot generally be eliminated by using the stack top.}
+\stemrow[I/O指令结果]{1.1 I/O program}{Load dev5, add M[940], store dev6: dev6 receives \code{0005}.}
+\stemrow[取指/存储器寄存器]{1.2 MAR/MBR}{Expand Fig. 1.4 execution: fetch via MAR/MBR; final M[941] = \code{0005}.}
+\stemrow[地址位数算容量]{1.3 32-bit instr.}{24-bit address field gives 16 MB; PC = 24 bits, IR = 32 bits.}
+\stemrow[地址空间换算]{1.4 16-bit addr.}{16-bit memory: 128 KiB; 8-bit memory: 64 KiB; 8-bit port number: 256 ports.}
+\stemrow[总线吞吐量]{1.5 bus rate}{8 MHz, 16-bit bus, 4 clocks/bus cycle gives 4 MB/s; wider bus or doubled clock gives 8 MB/s.}
+\stemrow[轮询改中断]{1.6 Teletype I/O}{FGI/FGO polling wastes CPU; IEN enables interrupt-driven I/O.}
+\stemrow[DMA优先权]{1.7 DMA priority}{DMA gets memory priority because device delay may lose data; CPU delay mostly slows execution.}
+\stemrow[DMA占用比例]{1.8 DMA slowdown}{9600 bps DMA slows 1 MIPS CPU by about 0.12\%.}
+\stemrow[I/O速率比较]{1.9 I/O rate}{Programmed I/O = 25,000 words/s; DMA = \(2.15\times10^6\) words/s.}
+\stemrow[空间/时间局部性]{1.10 locality code}{Spatial: sequential \code{a[i]}; temporal: repeated same \code{a[i]} in inner loop.}
+\stemrow[多级存储公式]{1.11 n-level memory}{Use \(T_{\mathrm{avg}}=\sum_i(\prod_{j<i}(1-H_j))T_i\), \(C_{\mathrm{avg}}=\sum C_iS_i/\sum S_i\).}
+\stemrow[成本和命中率]{1.12 cost/hit}{Main memory \(\approx \$83.89\); cache-tech \(\approx \$838.86\); \(H\approx99.17\%\).}
+\stemrow[平均访问时间]{1.13 cache/disk}{Average access time \(\approx480{,}026\) ns.}
+\stemrow[PC不能省]{1.14 stack PC}{No; the PC cannot generally be eliminated by using the stack top.}
 \end{stemlist}
 
 \cheatsection{2.1 OS Objectives and Functions}
@@ -308,11 +308,11 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{PDF Stems and Answers}
 \begin{stemlist}
-\stemrow{R2.1}{Stem: three OS-design objectives. A: convenience, efficiency, evolution.}
-\stemrow{R2.2}{Stem: kernel of an OS. A: memory-resident core with frequent OS functions.}
-\stemrow{P2.4}{Stem: system-call purpose and dual-mode relation. A: safe service request; user mode traps to kernel mode, then returns.}
-\stemrow{P2.5}{Stem: OS/390 SRM checks untouched page frames. A: find inactive pages, guide replacement/reallocation, detect memory pressure or thrashing.}
-\stemrow{R2.6}{Stem: five storage duties. A: isolation, allocation, modular support, protection/access control, long-term storage.}
+\stemrow[OS三目标]{R2.1}{Stem: three OS-design objectives. A: convenience, efficiency, evolution.}
+\stemrow[内核定义]{R2.2}{Stem: kernel of an OS. A: memory-resident core with frequent OS functions.}
+\stemrow[系统调用+双模式]{P2.4}{Stem: system-call purpose and dual-mode relation. A: safe service request; user mode traps to kernel mode, then returns.}
+\stemrow[页框检查/内存压力]{P2.5}{Stem: OS/390 SRM checks untouched page frames. A: find inactive pages, guide replacement/reallocation, detect memory pressure or thrashing.}
+\stemrow[存储管理职责]{R2.6}{Stem: five storage duties. A: isolation, allocation, modular support, protection/access control, long-term storage.}
 \end{stemlist}
 
 \cheatsection{Chapter 2 Fast Recall}
@@ -377,36 +377,36 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{Chapter 3 Review Q\&A}
 \begin{stemlist}
-\stemrow{R3.1 Trace}{Stem: instruction trace. A: executed instruction sequence of a process.}
-\stemrow{R3.2 Creation}{Stem: process creation events. A: new batch job, interactive logon, OS-created service, spawned child.}
-\stemrow{R3.3 States}{Stem: Fig. 3.6 states. A: New, Ready, Running, Blocked, Exit.}
-\stemrow{R3.4 Preempt}{Stem: preempt a process. A: reclaim CPU before the process voluntarily yields or finishes.}
-\stemrow{R3.5 Swapping}{Stem: swapping and purpose. A: move process memory to/from disk to free memory and improve CPU use.}
-\stemrow{R3.6 Two blocked}{Stem: why Fig. 3.9b has two blocked states. A: resident Blocked vs swapped-out Blocked/Suspend.}
-\stemrow{R3.7 Suspended}{Stem: four suspended-process traits. A: not executable now; may wait; agent-suspended; explicitly activated.}
-\stemrow{R3.8 OS tables}{Stem: OS management tables. A: memory, I/O, file, process.}
-\stemrow{R3.9 PCB info}{Stem: three PCB categories. A: identification, processor state, process control.}
-\stemrow{R3.10 Modes}{Stem: why user/kernel modes. A: protect OS, PCBs, memory, I/O, privileged instructions.}
-\stemrow{R3.11 Create}{Stem: OS steps to create process. A: PID, space, PCB, links, other tables.}
-\stemrow{R3.12 Int/trap}{Stem: interrupt vs trap. A: external asynchronous event vs instruction-caused exception.}
-\stemrow{R3.13 Examples}{Stem: three interrupts. A: clock, I/O, memory fault.}
-\stemrow{R3.14 Switches}{Stem: mode switch vs process switch. A: privilege change vs changing the running process.}
+\stemrow[指令轨迹]{R3.1 Trace}{Stem: instruction trace. A: executed instruction sequence of a process.}
+\stemrow[进程创建来源]{R3.2 Creation}{Stem: process creation events. A: new batch job, interactive logon, OS-created service, spawned child.}
+\stemrow[五状态]{R3.3 States}{Stem: Fig. 3.6 states. A: New, Ready, Running, Blocked, Exit.}
+\stemrow[抢占定义]{R3.4 Preempt}{Stem: preempt a process. A: reclaim CPU before the process voluntarily yields or finishes.}
+\stemrow[交换目的]{R3.5 Swapping}{Stem: swapping and purpose. A: move process memory to/from disk to free memory and improve CPU use.}
+\stemrow[内存内外阻塞]{R3.6 Two blocked}{Stem: why Fig. 3.9b has two blocked states. A: resident Blocked vs swapped-out Blocked/Suspend.}
+\stemrow[挂起特征]{R3.7 Suspended}{Stem: four suspended-process traits. A: not executable now; may wait; agent-suspended; explicitly activated.}
+\stemrow[OS四类表]{R3.8 OS tables}{Stem: OS management tables. A: memory, I/O, file, process.}
+\stemrow[PCB三类信息]{R3.9 PCB info}{Stem: three PCB categories. A: identification, processor state, process control.}
+\stemrow[模式保护]{R3.10 Modes}{Stem: why user/kernel modes. A: protect OS, PCBs, memory, I/O, privileged instructions.}
+\stemrow[创建步骤]{R3.11 Create}{Stem: OS steps to create process. A: PID, space, PCB, links, other tables.}
+\stemrow[中断vs陷阱]{R3.12 Int/trap}{Stem: interrupt vs trap. A: external asynchronous event vs instruction-caused exception.}
+\stemrow[中断例子]{R3.13 Examples}{Stem: three interrupts. A: clock, I/O, memory fault.}
+\stemrow[模式vs进程切换]{R3.14 Switches}{Stem: mode switch vs process switch. A: privilege change vs changing the running process.}
 \end{stemlist}
 
 \cheatsection{Chapter 3 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P3.1 Transitions}{Stem: R/RUN/B/NR transition table. A: 1 dispatch; 2 preempt; 3 event wait; 4 event occurs; 5 ready swap-out; 6 blocked swap-out.}
-\stemrow{P3.2 Timeline}{Stem: process states at \(t=22,37,47\). A: \(t=22\): P1 B(d3 read), P3 B(d2 read), P7 B(d3 write), P5 likely running. \(t=37\): P1/P3 ready, P5 Blocked/Suspend, P7 blocked, P8 running. \(t=47\): P5 ready, P7 blocked, P8 exit; one ready process may run.}
-\stemrow{P3.3 Seven states}{Stem: possible/impossible Fig. 3.9b transitions. A: Possible direct moves: N\(\to\)R/RS/E; R\(\to\)Run/RS/E; Run\(\to\)R/B/RS/E; B\(\to\)R/BS/E; RS\(\to\)R/E; BS\(\to\)B/RS/E; all other direct moves are impossible.}
-\stemrow{P3.4 Queues}{Stem: seven-state queueing diagram. A: Ready queue, processor, per-event Blocked queues, Ready/Suspend queue, and per-event Blocked/Suspend queues.}
-\stemrow{P3.5 Policy}{Stem: choose Ready vs high-priority Ready/Suspend. A: swap in Ready/Suspend only when priority or aging benefit exceeds swap cost; otherwise dispatch resident Ready.}
-\stemrow{P3.6 VAX states}{Stem: justify VAX/VMS wait states. A: many waits give precise event/resource queues; paging/global resource waits need no resident/outswapped pair; transitions follow dispatch, wait, event, swap.}
-\stemrow{P3.7 Access modes}{Stem: four access modes vs two. A: Kernel, Executive, Supervisor, User give finer least-privilege protection, but add complexity and mode-switch overhead.}
-\stemrow{P3.8 Rings}{Stem: ring protection need-to-know problem. A: rings are nested; inner domains can access outer objects, so selective need-to-know access is hard to enforce.}
-\stemrow{P3.9 Multi-wait}{Stem: process waiting on multiple events. A: yes, e.g., network, keyboard, timeout; use wait descriptors or multiple queue links and remove stale links after wakeup.}
-\stemrow{P3.10 Fixed saves}{Stem: fixed interrupt register-save locations. A: practical only for simple nonnested systems; nested interrupts, multiprogramming, and switches need PCB/kernel-stack context.}
-\stemrow{P3.11 Real-time}{Stem: nonpreemptive kernel and real-time. A: it can cause unbounded latency, priority inversion, and missed deadlines; real-time systems need bounded response.}
-\stemrow{P3.12 Fork}{Stem: possible output of successful \code{fork()}. A: two lines print: \(0\) in the child and child PID in the parent; order is scheduler-dependent.}
+\stemrow[状态转换表]{P3.1 Transitions}{Stem: R/RUN/B/NR transition table. A: 1 dispatch; 2 preempt; 3 event wait; 4 event occurs; 5 ready swap-out; 6 blocked swap-out.}
+\stemrow[按时间判状态]{P3.2 Timeline}{Stem: process states at \(t=22,37,47\). A: \(t=22\): P1 B(d3 read), P3 B(d2 read), P7 B(d3 write), P5 likely running. \(t=37\): P1/P3 ready, P5 Blocked/Suspend, P7 blocked, P8 running. \(t=47\): P5 ready, P7 blocked, P8 exit; one ready process may run.}
+\stemrow[七状态可达性]{P3.3 Seven states}{Stem: possible/impossible Fig. 3.9b transitions. A: Possible direct moves: N\(\to\)R/RS/E; R\(\to\)Run/RS/E; Run\(\to\)R/B/RS/E; B\(\to\)R/BS/E; RS\(\to\)R/E; BS\(\to\)B/RS/E; all other direct moves are impossible.}
+\stemrow[就绪/阻塞队列]{P3.4 Queues}{Stem: seven-state queueing diagram. A: Ready queue, processor, per-event Blocked queues, Ready/Suspend queue, and per-event Blocked/Suspend queues.}
+\stemrow[换入策略]{P3.5 Policy}{Stem: choose Ready vs high-priority Ready/Suspend. A: swap in Ready/Suspend only when priority or aging benefit exceeds swap cost; otherwise dispatch resident Ready.}
+\stemrow[VAX等待状态]{P3.6 VAX states}{Stem: justify VAX/VMS wait states. A: many waits give precise event/resource queues; paging/global resource waits need no resident/outswapped pair; transitions follow dispatch, wait, event, swap.}
+\stemrow[多访问模式]{P3.7 Access modes}{Stem: four access modes vs two. A: Kernel, Executive, Supervisor, User give finer least-privilege protection, but add complexity and mode-switch overhead.}
+\stemrow[环保护限制]{P3.8 Rings}{Stem: ring protection need-to-know problem. A: rings are nested; inner domains can access outer objects, so selective need-to-know access is hard to enforce.}
+\stemrow[多事件等待]{P3.9 Multi-wait}{Stem: process waiting on multiple events. A: yes, e.g., network, keyboard, timeout; use wait descriptors or multiple queue links and remove stale links after wakeup.}
+\stemrow[固定保存位置]{P3.10 Fixed saves}{Stem: fixed interrupt register-save locations. A: practical only for simple nonnested systems; nested interrupts, multiprogramming, and switches need PCB/kernel-stack context.}
+\stemrow[非抢占内核风险]{P3.11 Real-time}{Stem: nonpreemptive kernel and real-time. A: it can cause unbounded latency, priority inversion, and missed deadlines; real-time systems need bounded response.}
+\stemrow[fork输出顺序]{P3.12 Fork}{Stem: possible output of successful \code{fork()}. A: two lines print: \(0\) in the child and child PID in the parent; order is scheduler-dependent.}
 \end{stemlist}
 
 \cheatsection{Chapter 3 Fast Recall}
@@ -441,30 +441,30 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{Chapter 4 Review Q\&A}
 \begin{stemlist}
-\stemrow{R4.1 PCB/TCB}{Stem: which PCB elements move to TCB. A: TCB gets thread state, PC, registers, stack pointer, priority, scheduling info, private data; PCB keeps PID, address space, memory, files/I/O, privileges, IPC.}
-\stemrow{R4.2 Switch cost}{Stem: why thread mode switch may be cheaper. A: same-process threads keep the same address space and resources; only thread context is saved/restored.}
-\stemrow{R4.3 Process traits}{Stem: two independent process characteristics. A: resource ownership and scheduling/execution.}
-\stemrow{R4.4 Uses}{Stem: four thread uses. A: foreground/background work, asynchronous processing, faster execution by overlap/parallelism, modular program structure.}
-\stemrow{R4.5 Shared resources}{Stem: resources shared by process threads. A: address space, code, global data, heap, files, I/O resources, privileges; each thread has own PC, registers, stack, state.}
-\stemrow{R4.6 ULT pros}{Stem: three ULT advantages over KLTs. A: no kernel switch for thread ops, application-specific scheduling, portability.}
-\stemrow{R4.7 ULT cons}{Stem: two ULT disadvantages. A: blocking syscall may block the whole process; pure ULT cannot use multiple CPUs in parallel.}
-\stemrow{R4.8 Jacketing}{Stem: define jacketing. A: wrapper turns a blocking syscall into nonblocking behavior for user-level thread scheduling.}
+\stemrow[PCB和TCB分工]{R4.1 PCB/TCB}{Stem: which PCB elements move to TCB. A: TCB gets thread state, PC, registers, stack pointer, priority, scheduling info, private data; PCB keeps PID, address space, memory, files/I/O, privileges, IPC.}
+\stemrow[线程切换便宜]{R4.2 Switch cost}{Stem: why thread mode switch may be cheaper. A: same-process threads keep the same address space and resources; only thread context is saved/restored.}
+\stemrow[进程两属性]{R4.3 Process traits}{Stem: two independent process characteristics. A: resource ownership and scheduling/execution.}
+\stemrow[线程用途]{R4.4 Uses}{Stem: four thread uses. A: foreground/background work, asynchronous processing, faster execution by overlap/parallelism, modular program structure.}
+\stemrow[共享/私有资源]{R4.5 Shared resources}{Stem: resources shared by process threads. A: address space, code, global data, heap, files, I/O resources, privileges; each thread has own PC, registers, stack, state.}
+\stemrow[ULT优点]{R4.6 ULT pros}{Stem: three ULT advantages over KLTs. A: no kernel switch for thread ops, application-specific scheduling, portability.}
+\stemrow[ULT缺点]{R4.7 ULT cons}{Stem: two ULT disadvantages. A: blocking syscall may block the whole process; pure ULT cannot use multiple CPUs in parallel.}
+\stemrow[封套定义]{R4.8 Jacketing}{Stem: define jacketing. A: wrapper turns a blocking syscall into nonblocking behavior for user-level thread scheduling.}
 \end{stemlist}
 
 \cheatsection{Chapter 4 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P4.1 Same-process switch}{Stem: same-process vs different-process thread switch. A: yes; same-process switch avoids address-space/resource switch.}
-\stemrow{P4.2 ULT blocking}{Stem: why one blocking ULT blocks all. A: kernel is unaware of ULTs and blocks the whole process on a blocking syscall.}
-\stemrow{P4.3 OS/2 sessions}{Stem: remove sessions, bind UI to processes. A: lose grouping of several processes under one UI; assign memory/files/resources to processes, not threads.}
-\stemrow{P4.4 1:1 on uniprocessor}{Stem: why faster than single thread. A: when one thread waits for I/O, another ready thread can run; CPU use and responsiveness improve.}
-\stemrow{P4.5 Process exit}{Stem: process exits while threads run. A: no thread continues; threads depend on the process address space/resources.}
-\stemrow{P4.6 OS/390 ASCB/TCB}{Stem: split global ASCB and local TCB. A: separates address-space management from task execution and reduces global kernel data.}
-\stemrow{P4.7 count\_positives}{Stem: function and two-thread risk. A: counts positive list values into a global counter; unsynchronized shared counter creates data-race risk.}
-\stemrow{P4.8 Optimized code}{Stem: compiler caches global counter. A: local-register copy can overwrite another thread update, causing lost update.}
-\stemrow{P4.9 Pthreads}{Stem: two threads increment \code{myglobal}; output 21. A: unexpected race; read-add-write is not atomic, so increments are lost.}
-\stemrow{P4.10 Solaris yield}{Stem: yield to same priority only. A: a higher-priority runnable thread would normally be selected by the scheduler; yield donates only among equal-priority peers.}
-\stemrow{P4.11 Solaris ULT/LWP}{Stem: many ULTs per LWP and state diagrams. A: fewer LWPs reduce kernel overhead; ULT state and LWP state differ because user library and kernel schedule different entities.}
-\stemrow{P4.12 Linux uninterruptible}{Stem: rationale for Uninterruptible state. A: protect kernel/device consistency while waiting for critical I/O/resource events; wake only when event completes.}
+\stemrow[同进程切换]{P4.1 Same-process switch}{Stem: same-process vs different-process thread switch. A: yes; same-process switch avoids address-space/resource switch.}
+\stemrow[ULT阻塞全进程]{P4.2 ULT blocking}{Stem: why one blocking ULT blocks all. A: kernel is unaware of ULTs and blocks the whole process on a blocking syscall.}
+\stemrow[会话与资源归属]{P4.3 OS/2 sessions}{Stem: remove sessions, bind UI to processes. A: lose grouping of several processes under one UI; assign memory/files/resources to processes, not threads.}
+\stemrow[I/O重叠]{P4.4 1:1 on uniprocessor}{Stem: why faster than single thread. A: when one thread waits for I/O, another ready thread can run; CPU use and responsiveness improve.}
+\stemrow[进程结束线程全灭]{P4.5 Process exit}{Stem: process exits while threads run. A: no thread continues; threads depend on the process address space/resources.}
+\stemrow[地址空间/任务分离]{P4.6 OS/390 ASCB/TCB}{Stem: split global ASCB and local TCB. A: separates address-space management from task execution and reduces global kernel data.}
+\stemrow[共享计数竞态]{P4.7 count\_positives}{Stem: function and two-thread risk. A: counts positive list values into a global counter; unsynchronized shared counter creates data-race risk.}
+\stemrow[寄存器缓存丢更新]{P4.8 Optimized code}{Stem: compiler caches global counter. A: local-register copy can overwrite another thread update, causing lost update.}
+\stemrow[自增非原子]{P4.9 Pthreads}{Stem: two threads increment \code{myglobal}; output 21. A: unexpected race; read-add-write is not atomic, so increments are lost.}
+\stemrow[yield同优先级]{P4.10 Solaris yield}{Stem: yield to same priority only. A: a higher-priority runnable thread would normally be selected by the scheduler; yield donates only among equal-priority peers.}
+\stemrow[ULT到LWP映射]{P4.11 Solaris ULT/LWP}{Stem: many ULTs per LWP and state diagrams. A: fewer LWPs reduce kernel overhead; ULT state and LWP state differ because user library and kernel schedule different entities.}
+\stemrow[不可中断等待]{P4.12 Linux uninterruptible}{Stem: rationale for Uninterruptible state. A: protect kernel/device consistency while waiting for critical I/O/resource events; wake only when event completes.}
 \end{stemlist}
 
 \cheatsection{Chapter 4 Fast Recall}
@@ -518,33 +518,33 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{Chapter 5 Review Q\&A}
 \begin{stemlist}
-\stemrow{R5.1 Design issues}{Stem: four concurrency design issues. A: process communication, resource sharing/competition, synchronization, processor-time allocation.}
-\stemrow{R5.2 Contexts}{Stem: three contexts where concurrency arises. A: multiple applications, structured applications, OS structure.}
-\stemrow{R5.3 Basic requirement}{Stem: requirement for concurrent execution. A: enforce mutual exclusion for critical resources, with correct synchronization.}
-\stemrow{R5.4 Awareness}{Stem: three degrees of process awareness. A: unaware/competition; indirectly aware/cooperation by sharing; directly aware/cooperation by communication.}
-\stemrow{R5.5 Compete vs cooperate}{Stem: distinction. A: competing processes only contend for resources; cooperating processes work together by shared data or messages.}
-\stemrow{R5.6 Control problems}{Stem: three competing-process problems. A: mutual exclusion, deadlock, starvation.}
-\stemrow{R5.7 Mutex requirements}{Stem: list requirements. A: one-at-a-time, noncritical halt harmless, no deadlock/starvation, no needless delay, no speed/CPU assumptions, finite CS time.}
-\stemrow{R5.8 Semaphore ops}{Stem: operations. A: initialize, \code{semWait}/P, \code{semSignal}/V; no direct arbitrary access.}
-\stemrow{R5.9 Binary/general}{Stem: difference. A: binary is 0/1; general/counting is integer-valued for multiple units or synchronization.}
-\stemrow{R5.10 Strong/weak}{Stem: difference. A: strong uses FIFO waiter release; weak gives no release-order guarantee.}
-\stemrow{R5.11 Monitor}{Stem: monitor. A: high-level synchronization module encapsulating shared data/procedures; only one process active inside, with condition variables for waiting.}
-\stemrow{R5.12 Messages}{Stem: blocking vs nonblocking. A: blocking send/receive waits for completion or message; nonblocking returns immediately after queueing or status check.}
-\stemrow{R5.13 Readers/writers}{Stem: conditions. A: many readers may read together; writers need exclusive access; policies must avoid reader or writer starvation.}
+\stemrow[并发四问题]{R5.1 Design issues}{Stem: four concurrency design issues. A: process communication, resource sharing/competition, synchronization, processor-time allocation.}
+\stemrow[并发出现位置]{R5.2 Contexts}{Stem: three contexts where concurrency arises. A: multiple applications, structured applications, OS structure.}
+\stemrow[基本要求互斥]{R5.3 Basic requirement}{Stem: requirement for concurrent execution. A: enforce mutual exclusion for critical resources, with correct synchronization.}
+\stemrow[感知三层次]{R5.4 Awareness}{Stem: three degrees of process awareness. A: unaware/competition; indirectly aware/cooperation by sharing; directly aware/cooperation by communication.}
+\stemrow[竞争vs协作]{R5.5 Compete vs cooperate}{Stem: distinction. A: competing processes only contend for resources; cooperating processes work together by shared data or messages.}
+\stemrow[互斥死锁饥饿]{R5.6 Control problems}{Stem: three competing-process problems. A: mutual exclusion, deadlock, starvation.}
+\stemrow[互斥六条件]{R5.7 Mutex requirements}{Stem: list requirements. A: one-at-a-time, noncritical halt harmless, no deadlock/starvation, no needless delay, no speed/CPU assumptions, finite CS time.}
+\stemrow[信号量操作]{R5.8 Semaphore ops}{Stem: operations. A: initialize, \code{semWait}/P, \code{semSignal}/V; no direct arbitrary access.}
+\stemrow[二元vs计数]{R5.9 Binary/general}{Stem: difference. A: binary is 0/1; general/counting is integer-valued for multiple units or synchronization.}
+\stemrow[强弱信号量]{R5.10 Strong/weak}{Stem: difference. A: strong uses FIFO waiter release; weak gives no release-order guarantee.}
+\stemrow[管程定义]{R5.11 Monitor}{Stem: monitor. A: high-level synchronization module encapsulating shared data/procedures; only one process active inside, with condition variables for waiting.}
+\stemrow[消息阻塞性]{R5.12 Messages}{Stem: blocking vs nonblocking. A: blocking send/receive waits for completion or message; nonblocking returns immediately after queueing or status check.}
+\stemrow[读者写者]{R5.13 Readers/writers}{Stem: conditions. A: many readers may read together; writers need exclusive access; policies must avoid reader or writer starvation.}
 \end{stemlist}
 
 \cheatsection{Chapter 5 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P5.1 Multi vs multiprocessing}{Stem: two concurrency differences. A: multiprogramming interleaves one CPU and can protect short regions by disabling interrupts; multiprocessing has true overlap, so one-CPU interrupt disable is insufficient.}
-\stemrow{P5.3 Race traces}{Stem: print \code{x is 10} or \code{x is 8}. A: interleave the \code{if} test and \code{printf} to print 10; split load/decrement/store and load/increment/store to overwrite with stale 8.}
-\stemrow{P5.4 Tally bounds}{Stem: two \code{total()} processes, \(n=50\). A: final \code{tally} is 2 to 100; with \(k\) processes, upper \(50k\), lower can still be 2 for \(k\ge2\).}
-\stemrow{P5.5 Busy wait}{Stem: always less efficient than blocking? A: no; short waits may be cheaper than block/context-switch/restart overhead; long waits should block.}
-\stemrow{P5.12 Sem definitions}{Stem: negative-count vs nonnegative-count semaphore definitions. A: equivalent to programs because waiters are represented either by negative count or by the queue; users cannot inspect internals.}
-\stemrow{P5.16 General via binary}{Stem: flaw and fix. A: binary \code{delay} can lose wakeups; use pass-the-baton: if \code{semSignal} wakes a waiter, it signals \code{delay} instead of releasing \code{mutex}; awakened waiter releases \code{mutex}.}
-\stemrow{P5.19 Consumer deadlock}{Stem: move empty-test inside mutex. A: consumer can hold \(s\) while waiting on \code{delay}; producer then waits for \(s\), so both block.}
-\stemrow{P5.20 Faster infinite buffer}{Stem: reduce semaphore overhead. A: let \(n=-1\) mean empty and consumer waiting; producer signals \code{delay} only when append changes \(n\) from -1 to 0.}
-\stemrow{P5.21 Swap order}{Stem: bounded-buffer statement swaps. A: swapping wait \(e/s\) or wait \(n/s\) can deadlock; swapping signal \(s/n\) or signal \(s/e\) preserves correctness but may add waiting.}
-\stemrow{P5.22 Trace table}{Stem: fill bounded-buffer chart. A: blank labels: Pa p2, Pb p2, Pb p3, Cb c2, Pc p2, Cb c3, Pa p3, Pc p3, Pa p2, Pa p3; use FIFO queues; final state full \(=3\), empty \(=0\), buffer \(=XXX\).}
+\stemrow[单CPU vs 多CPU]{P5.1 Multi vs multiprocessing}{Stem: two concurrency differences. A: multiprogramming interleaves one CPU and can protect short regions by disabling interrupts; multiprocessing has true overlap, so one-CPU interrupt disable is insufficient.}
+\stemrow[竞态交错]{P5.3 Race traces}{Stem: print \code{x is 10} or \code{x is 8}. A: interleave the \code{if} test and \code{printf} to print 10; split load/decrement/store and load/increment/store to overwrite with stale 8.}
+\stemrow[丢更新上下界]{P5.4 Tally bounds}{Stem: two \code{total()} processes, \(n=50\). A: final \code{tally} is 2 to 100; with \(k\) processes, upper \(50k\), lower can still be 2 for \(k\ge2\).}
+\stemrow[忙等适用场景]{P5.5 Busy wait}{Stem: always less efficient than blocking? A: no; short waits may be cheaper than block/context-switch/restart overhead; long waits should block.}
+\stemrow[信号量等价定义]{P5.12 Sem definitions}{Stem: negative-count vs nonnegative-count semaphore definitions. A: equivalent to programs because waiters are represented either by negative count or by the queue; users cannot inspect internals.}
+\stemrow[二元实现计数]{P5.16 General via binary}{Stem: flaw and fix. A: binary \code{delay} can lose wakeups; use pass-the-baton: if \code{semSignal} wakes a waiter, it signals \code{delay} instead of releasing \code{mutex}; awakened waiter releases \code{mutex}.}
+\stemrow[拿锁等待导致死锁]{P5.19 Consumer deadlock}{Stem: move empty-test inside mutex. A: consumer can hold \(s\) while waiting on \code{delay}; producer then waits for \(s\), so both block.}
+\stemrow[减少信号量开销]{P5.20 Faster infinite buffer}{Stem: reduce semaphore overhead. A: let \(n=-1\) mean empty and consumer waiting; producer signals \code{delay} only when append changes \(n\) from -1 to 0.}
+\stemrow[wait顺序会死锁]{P5.21 Swap order}{Stem: bounded-buffer statement swaps. A: swapping wait \(e/s\) or wait \(n/s\) can deadlock; swapping signal \(s/n\) or signal \(s/e\) preserves correctness but may add waiting.}
+\stemrow[有界缓冲追踪]{P5.22 Trace table}{Stem: fill bounded-buffer chart. A: blank labels: Pa p2, Pb p2, Pb p3, Cb c2, Pc p2, Cb c3, Pa p3, Pc p3, Pa p2, Pa p3; use FIFO queues; final state full \(=3\), empty \(=0\), buffer \(=XXX\).}
 \end{stemlist}
 
 \cheatsection{Chapter 5 Fast Recall}
@@ -594,22 +594,22 @@ For request \(R_i\): require \(R_i\le Need_i\) and \(R_i\le Available\); pretend
 
 \cheatsection{Chapter 6 Review Q\&A}
 \begin{stemlist}
-\stemrow{R6.1 Resource examples}{Stem: reusable vs consumable resources. A: reusable: CPU, memory, files, devices, semaphores; consumable: messages, signals, interrupts, buffer data.}
-\stemrow{R6.2 Possible deadlock}{Stem: three conditions for deadlock possibility. A: mutual exclusion, hold and wait, no preemption.}
-\stemrow{R6.3 Actual deadlock}{Stem: four deadlock conditions. A: mutual exclusion, hold and wait, no preemption, circular wait.}
-\stemrow{R6.4 Prevent hold-wait}{Stem: hold-and-wait prevention. A: require a process to request all needed resources at once, or release held resources before requesting more.}
-\stemrow{R6.5 Prevent no-preempt}{Stem: two no-preemption attacks. A: if a request fails, release held resources and retry; or preempt resources from another holder when state can be restored.}
-\stemrow{R6.6 Prevent circular wait}{Stem: circular-wait prevention. A: impose a total order on resource types and request only in increasing order.}
-\stemrow{R6.7 Three strategies}{Stem: prevention vs avoidance vs detection. A: prevention breaks a condition; avoidance refuses unsafe grants; detection finds existing deadlocks and recovers.}
+\stemrow[资源类型例子]{R6.1 Resource examples}{Stem: reusable vs consumable resources. A: reusable: CPU, memory, files, devices, semaphores; consumable: messages, signals, interrupts, buffer data.}
+\stemrow[死锁可能三条件]{R6.2 Possible deadlock}{Stem: three conditions for deadlock possibility. A: mutual exclusion, hold and wait, no preemption.}
+\stemrow[死锁四条件]{R6.3 Actual deadlock}{Stem: four deadlock conditions. A: mutual exclusion, hold and wait, no preemption, circular wait.}
+\stemrow[破坏占有等待]{R6.4 Prevent hold-wait}{Stem: hold-and-wait prevention. A: require a process to request all needed resources at once, or release held resources before requesting more.}
+\stemrow[破坏不可抢占]{R6.5 Prevent no-preempt}{Stem: two no-preemption attacks. A: if a request fails, release held resources and retry; or preempt resources from another holder when state can be restored.}
+\stemrow[资源全序]{R6.6 Prevent circular wait}{Stem: circular-wait prevention. A: impose a total order on resource types and request only in increasing order.}
+\stemrow[预防/避免/检测]{R6.7 Three strategies}{Stem: prevention vs avoidance vs detection. A: prevention breaks a condition; avoidance refuses unsafe grants; detection finds existing deadlocks and recovers.}
 \end{stemlist}
 
 \cheatsection{Chapter 6 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P6.1 Traffic deadlock}{Stem: show four conditions in Fig. 6.1a. A: each road quadrant is exclusive; cars hold one quadrant while waiting; cars cannot be preempted; cars wait in a cycle.}
-\stemrow{P6.2 Apply strategies}{Stem: prevention/avoidance/detection for Fig. 6.1. A: traffic lights/order break circular wait; controller allows only safe entry; detection notices blocked cycle and backs/removes one car.}
-\stemrow{P6.3 Six paths}{Stem: narrate Fig. 6.3 paths. A: Q-first, P-then-Q, mixed Q-holds-B/P-releases-A, mixed after A release, P-holds-B/Q-waits, or P-first; all avoid a fatal region.}
-\stemrow{P6.4 No deadlock}{Stem: justify Fig. 6.3. A: P releases A before requesting B; Q may hold B and wait for A, but P does not hold A while waiting for B, so no circular wait.}
-\stemrow{P6.5 Banker state}{Stem: verify, need, safe sequence, P5 request. A: allocated total 9346, so Available 6354. Need rows: P0 7534, P1 2122, P2 3442, P3 2331, P4 4121, P5 3433. Safe order: P1,P2,P0,P3,P4,P5. Granting P5 3233 leaves 3121 and no process can finish; deny.}
+\stemrow[交通四条件]{P6.1 Traffic deadlock}{Stem: show four conditions in Fig. 6.1a. A: each road quadrant is exclusive; cars hold one quadrant while waiting; cars cannot be preempted; cars wait in a cycle.}
+\stemrow[三策略套交通]{P6.2 Apply strategies}{Stem: prevention/avoidance/detection for Fig. 6.1. A: traffic lights/order break circular wait; controller allows only safe entry; detection notices blocked cycle and backs/removes one car.}
+\stemrow[路径避死锁]{P6.3 Six paths}{Stem: narrate Fig. 6.3 paths. A: Q-first, P-then-Q, mixed Q-holds-B/P-releases-A, mixed after A release, P-holds-B/Q-waits, or P-first; all avoid a fatal region.}
+\stemrow[无循环等待]{P6.4 No deadlock}{Stem: justify Fig. 6.3. A: P releases A before requesting B; Q may hold B and wait for A, but P does not hold A while waiting for B, so no circular wait.}
+\stemrow[银行家安全序列]{P6.5 Banker state}{Stem: verify, need, safe sequence, P5 request. A: allocated total 9346, so Available 6354. Need rows: P0 7534, P1 2122, P2 3442, P3 2331, P4 4121, P5 3433. Safe order: P1,P2,P0,P3,P4,P5. Granting P5 3233 leaves 3121 and no process can finish; deny.}
 \par\vspace{1pt}\noindent
 \begin{tabular}{@{}c@{\hspace{1pt}}c@{}}
 \includegraphics[width=0.49\linewidth]{chapter6-rag-requested.png} &
@@ -618,11 +618,11 @@ For request \(R_i\): require \(R_i\le Need_i\) and \(R_i\le Available\); pretend
 \includegraphics[width=0.49\linewidth]{chapter6-rag-no-deadlock.png}
 \end{tabular}
 \par\vspace{1pt}
-\stemrow{P6.6 RAG/order}{Stem: code with P0 A,B,C; P1 D,E,B; P2 C,F,D. A: deadlock cycle P0 waits C held by P2; P2 waits D held by P1; P1 waits B held by P0. Prevent by global order A<B<C<D<E<F: P0 A,B,C; P1 B,D,E; P2 C,D,F.}
-\stemrow{P6.11 Memory banker}{Stem: total 150, P1 70/45, P2 60/40, P3 60/15; add P4. A: initial Available \(=50\). P4 hold 25 gives Available 25 and safe order P1,P2,P3,P4; grant. P4 hold 35 gives Available 15 and no need fits; deny.}
-\stemrow{P6.12 Banker usefulness}{Stem: evaluate banker's algorithm in an OS. A: good theory and predictable-resource systems; often impractical because max claims must be known, resources/processes vary, each request costs a safety test, and concurrency may be reduced.}
-\stemrow{P6.15 Min available}{Stem: one resource, \(C=(3,2,9,7)\), \(A=(1,1,3,2)\). A: Need \(=(2,1,6,5)\); minimum Available is 3, e.g., P2,P1,P4,P3.}
-\stemrow{P6.16 Rankings}{Stem: compare six deadlock methods by concurrency and efficiency. A: concurrency high to low: detect+kill, detect+rollback, banker, ordering, restart-on-wait, reserve-all. Rare-deadlock efficiency: ordering, reserve-all, detect+kill, restart-on-wait, banker, detect+rollback; if deadlocks are frequent, detection recovery becomes less attractive.}
+\stemrow[资源分配图+排序]{P6.6 RAG/order}{Stem: code with P0 A,B,C; P1 D,E,B; P2 C,F,D. A: deadlock cycle P0 waits C held by P2; P2 waits D held by P1; P1 waits B held by P0. Prevent by global order A<B<C<D<E<F: P0 A,B,C; P1 B,D,E; P2 C,D,F.}
+\stemrow[内存版银行家]{P6.11 Memory banker}{Stem: total 150, P1 70/45, P2 60/40, P3 60/15; add P4. A: initial Available \(=50\). P4 hold 25 gives Available 25 and safe order P1,P2,P3,P4; grant. P4 hold 35 gives Available 15 and no need fits; deny.}
+\stemrow[银行家局限]{P6.12 Banker usefulness}{Stem: evaluate banker's algorithm in an OS. A: good theory and predictable-resource systems; often impractical because max claims must be known, resources/processes vary, each request costs a safety test, and concurrency may be reduced.}
+\stemrow[最小Available]{P6.15 Min available}{Stem: one resource, \(C=(3,2,9,7)\), \(A=(1,1,3,2)\). A: Need \(=(2,1,6,5)\); minimum Available is 3, e.g., P2,P1,P4,P3.}
+\stemrow[方法效率排序]{P6.16 Rankings}{Stem: compare six deadlock methods by concurrency and efficiency. A: concurrency high to low: detect+kill, detect+rollback, banker, ordering, restart-on-wait, reserve-all. Rare-deadlock efficiency: ordering, reserve-all, detect+kill, restart-on-wait, banker, detect+rollback; if deadlocks are frequent, detection recovery becomes less attractive.}
 \end{stemlist}
 
 \cheatsection{Chapter 6 Fast Recall}
@@ -664,34 +664,34 @@ PA&=frame\times page\_size+offset
 
 \cheatsection{Chapter 7 Review Q\&A}
 \begin{stemlist}
-\stemrow{R7.1 Requirements}{Stem: memory-management requirements. A: relocation, protection, sharing, logical organization, physical organization.}
-\stemrow{R7.2 Relocation}{Stem: why relocation is desirable. A: processes can be loaded, swapped, or compacted into different physical locations without changing program addresses.}
-\stemrow{R7.3 Compile protection}{Stem: why protection cannot be enforced at compile time. A: final physical locations, sharing, and relocation are run-time facts, so run-time checks are needed.}
-\stemrow{R7.4 Sharing}{Stem: why share memory regions. A: shared libraries/code, shared data, IPC, common files/buffers, and memory savings.}
-\stemrow{R7.5 Unequal fixed partitions}{Stem: advantages. A: better match to process sizes, less internal waste, and support for both small and larger processes.}
-\stemrow{R7.6 Fragmentation}{Stem: internal vs external. A: internal is unused space inside an allocation; external is separated free holes outside allocations.}
-\stemrow{R7.7 Address types}{Stem: logical/relative/physical. A: logical is program-visible; relative is an offset; physical is the real main-memory location.}
-\stemrow{R7.8 Page/frame}{Stem: difference. A: a page is a fixed-size logical-process block; a frame is the same-size physical-memory block.}
-\stemrow{R7.9 Page/segment}{Stem: difference. A: pages are fixed-size and system-managed; segments are variable-size logical units such as code, data, or stack.}
+\stemrow[五大需求]{R7.1 Requirements}{Stem: memory-management requirements. A: relocation, protection, sharing, logical organization, physical organization.}
+\stemrow[重定位好处]{R7.2 Relocation}{Stem: why relocation is desirable. A: processes can be loaded, swapped, or compacted into different physical locations without changing program addresses.}
+\stemrow[运行时保护]{R7.3 Compile protection}{Stem: why protection cannot be enforced at compile time. A: final physical locations, sharing, and relocation are run-time facts, so run-time checks are needed.}
+\stemrow[共享用途]{R7.4 Sharing}{Stem: why share memory regions. A: shared libraries/code, shared data, IPC, common files/buffers, and memory savings.}
+\stemrow[不等分区优点]{R7.5 Unequal fixed partitions}{Stem: advantages. A: better match to process sizes, less internal waste, and support for both small and larger processes.}
+\stemrow[内碎片vs外碎片]{R7.6 Fragmentation}{Stem: internal vs external. A: internal is unused space inside an allocation; external is separated free holes outside allocations.}
+\stemrow[三类地址]{R7.7 Address types}{Stem: logical/relative/physical. A: logical is program-visible; relative is an offset; physical is the real main-memory location.}
+\stemrow[页vs页框]{R7.8 Page/frame}{Stem: difference. A: a page is a fixed-size logical-process block; a frame is the same-size physical-memory block.}
+\stemrow[分页vs分段]{R7.9 Page/segment}{Stem: difference. A: pages are fixed-size and system-managed; segments are variable-size logical units such as code, data, or stack.}
 \end{stemlist}
 
 \cheatsection{Chapter 7 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P7.1 Objectives}{Stem: Section 2.3 objectives vs Section 7.1 requirements. A: isolation/protection, allocation/relocation, modularity/logical organization, access control/sharing, and storage hierarchy/physical organization cover the same concerns.}
-\stemrow{P7.2 Partition pointer}{Stem: \(2^{16}\)-byte partitions in \(2^{24}\)-byte memory. A: \(2^{24}/2^{16}=2^8\) partitions, so pointer needs 8 bits.}
-\stemrow{P7.3 50 percent rule}{Stem: holes vs segments in dynamic partitioning. A: in equilibrium, random deletion/allocation gives about one hole per two allocated segments, so holes \(\approx n/2\).}
-\stemrow{P7.4 Search length}{Stem: average free-list search. A: best-fit checks all holes unless size-sorted; first-fit and next-fit scan roughly half the list on average.}
-\stemrow{P7.5 Worst-fit}{Stem: largest hole placement. A: may avoid tiny leftovers but destroys large holes; search is full list unless kept largest-first.}
-\stemrow{P7.6 Diagram}{Stem: X is last 2 MB placement; then one swap-out. A: under low-address splitting, swapped-out max \(=1\) MB; X split a 7 MB hole; next 3 MB: best-fit exact 3 MB hole, first-fit first 4 MB hole, next-fit 5 MB hole after X, worst-fit 8 MB hole.}
-\stemrow{P7.7 Buddy sequence}{Stem: 1 MiB buddy requests 70,35,80; returns A; request 60; returns B,D,C. A: A=128 KiB, B=64 KiB, C=128 KiB, D=64 KiB; after Return B: free A128, free B64, used D64, used C128, free 128, free 512; final all coalesces to 1 MiB free.}
-\stemrow{P7.8 Buddy address}{Stem: block address \code{011011110000}. A: size 4 buddy \code{011011110100}; size 16 buddy \code{011011100000}.}
-\stemrow{P7.9 Buddy formula}{Stem: general buddy expression. A: \(buddy_k(x)=x\oplus2^k\); equivalently flip bit \(k\).}
-\stemrow{P7.10 Fibonacci buddy}{Stem: use Fibonacci sizes. A: yes; split \(F_{n+2}\) into \(F_{n+1}\) and \(F_n\). Advantage: less internal fragmentation; cost: harder buddy management.}
-\stemrow{P7.11 PC address}{Stem: relative vs absolute PC. A: relative PC is preferable because saved execution state remains relocation-independent; hardware translates on fetch.}
-\stemrow{P7.12 Paging bits}{Stem: \(2^{32}\) physical bytes, page \(2^{10}\), \(2^{16}\) logical pages. A: logical address 26 bits; frame 1024 bytes; frame field 22 bits; table \(2^{16}\) entries; PTE 23 bits with valid bit.}
-\stemrow{P7.13 Translate}{Stem: logical \code{0001010010111010}. A: paging: page 20, offset 186, frame 5 gives \code{0000010110111010}. Segmentation: seg 5, offset 186, base \(4+4096\times5\), physical \(20670\) = \code{0101000010111110}.}
-\stemrow{P7.14 Seg table}{Stem: translate \((seg,offset)\). A: (0,198)\(\to858\); (2,156)\(\to378\); (1,530)\(\to\)fault; (3,444)\(\to1440\); (0,222)\(\to882\).}
-\stemrow{P7.15 Compaction}{Stem: compaction fraction. A: \(F\ge(1-f)/(1+kf)\), \(k=t/(2s)-1\). For \(f=.2,t=1000,s=50\), \(k=9\), so \(F\ge0.8/2.8\approx0.286\).}
+\stemrow[目标对照需求]{P7.1 Objectives}{Stem: Section 2.3 objectives vs Section 7.1 requirements. A: isolation/protection, allocation/relocation, modularity/logical organization, access control/sharing, and storage hierarchy/physical organization cover the same concerns.}
+\stemrow[分区数取log]{P7.2 Partition pointer}{Stem: \(2^{16}\)-byte partitions in \(2^{24}\)-byte memory. A: \(2^{24}/2^{16}=2^8\) partitions, so pointer needs 8 bits.}
+\stemrow[50百分比规则]{P7.3 50 percent rule}{Stem: holes vs segments in dynamic partitioning. A: in equilibrium, random deletion/allocation gives about one hole per two allocated segments, so holes \(\approx n/2\).}
+\stemrow[空闲表搜索]{P7.4 Search length}{Stem: average free-list search. A: best-fit checks all holes unless size-sorted; first-fit and next-fit scan roughly half the list on average.}
+\stemrow[最坏适配]{P7.5 Worst-fit}{Stem: largest hole placement. A: may avoid tiny leftovers but destroys large holes; search is full list unless kept largest-first.}
+\stemrow[分区算法图]{P7.6 Diagram}{Stem: X is last 2 MB placement; then one swap-out. A: under low-address splitting, swapped-out max \(=1\) MB; X split a 7 MB hole; next 3 MB: best-fit exact 3 MB hole, first-fit first 4 MB hole, next-fit 5 MB hole after X, worst-fit 8 MB hole.}
+\stemrow[伙伴分裂合并]{P7.7 Buddy sequence}{Stem: 1 MiB buddy requests 70,35,80; returns A; request 60; returns B,D,C. A: A=128 KiB, B=64 KiB, C=128 KiB, D=64 KiB; after Return B: free A128, free B64, used D64, used C128, free 128, free 512; final all coalesces to 1 MiB free.}
+\stemrow[伙伴地址翻位]{P7.8 Buddy address}{Stem: block address \code{011011110000}. A: size 4 buddy \code{011011110100}; size 16 buddy \code{011011100000}.}
+\stemrow[异或公式]{P7.9 Buddy formula}{Stem: general buddy expression. A: \(buddy_k(x)=x\oplus2^k\); equivalently flip bit \(k\).}
+\stemrow[斐波那契伙伴]{P7.10 Fibonacci buddy}{Stem: use Fibonacci sizes. A: yes; split \(F_{n+2}\) into \(F_{n+1}\) and \(F_n\). Advantage: less internal fragmentation; cost: harder buddy management.}
+\stemrow[PC用相对地址]{P7.11 PC address}{Stem: relative vs absolute PC. A: relative PC is preferable because saved execution state remains relocation-independent; hardware translates on fetch.}
+\stemrow[分页位数计算]{P7.12 Paging bits}{Stem: \(2^{32}\) physical bytes, page \(2^{10}\), \(2^{16}\) logical pages. A: logical address 26 bits; frame 1024 bytes; frame field 22 bits; table \(2^{16}\) entries; PTE 23 bits with valid bit.}
+\stemrow[分页/分段翻译]{P7.13 Translate}{Stem: logical \code{0001010010111010}. A: paging: page 20, offset 186, frame 5 gives \code{0000010110111010}. Segmentation: seg 5, offset 186, base \(4+4096\times5\), physical \(20670\) = \code{0101000010111110}.}
+\stemrow[段表越界]{P7.14 Seg table}{Stem: translate \((seg,offset)\). A: (0,198)\(\to858\); (2,156)\(\to378\); (1,530)\(\to\)fault; (3,444)\(\to1440\); (0,222)\(\to882\).}
+\stemrow[紧凑收益阈值]{P7.15 Compaction}{Stem: compaction fraction. A: \(F\ge(1-f)/(1+kf)\), \(k=t/(2s)-1\). For \(f=.2,t=1000,s=50\), \(k=9\), so \(F\ge0.8/2.8\approx0.286\).}
 \end{stemlist}
 
 \cheatsection{Chapter 7 Fast Recall}
@@ -742,35 +742,35 @@ Offset \(d\) is copied unchanged; the page table maps page \(p\) to frame \(f\).
 
 \cheatsection{Chapter 8 Review Q\&A}
 \begin{stemlist}
-\stemrow{R8.1 Simple vs VM paging}{Stem: difference. A: simple paging requires all pages resident; virtual-memory paging keeps only needed pages and uses page faults.}
-\stemrow{R8.2 Thrashing}{Stem: explain. A: excessive page faults make the system spend most time paging instead of executing.}
-\stemrow{R8.3 Locality}{Stem: why crucial. A: references cluster, so a small resident set can cover the active working set.}
-\stemrow{R8.4 PTE fields}{Stem: typical elements. A: present/valid, modify/dirty, reference/use, frame number, protection/control.}
-\stemrow{R8.5 TLB}{Stem: purpose. A: cache recent PTEs to avoid an extra memory access for every translation.}
-\stemrow{R8.6 Fetch policies}{Stem: alternatives. A: demand paging loads on fault; prepaging loads likely-needed pages in advance.}
-\stemrow{R8.7 Resident/replacement}{Stem: difference. A: resident-set management chooses frame count/scope; replacement chooses the victim page.}
-\stemrow{R8.8 FIFO/clock}{Stem: relationship. A: clock is FIFO with a reference bit and second chance.}
-\stemrow{R8.9 Page buffering}{Stem: purpose. A: keep replaced pages on free/modified lists for quick reuse and batched dirty writes.}
-\stemrow{R8.10 Fixed+global}{Stem: why impossible. A: global replacement changes another process's frame count, violating fixed allocation.}
-\stemrow{R8.11 Resident/working set}{Stem: difference. A: resident set is pages actually in memory; working set is pages used recently.}
-\stemrow{R8.12 Cleaning}{Stem: demand cleaning vs precleaning. A: write dirty page at eviction vs write dirty pages before they are selected.}
+\stemrow[简单分页vs虚存]{R8.1 Simple vs VM paging}{Stem: difference. A: simple paging requires all pages resident; virtual-memory paging keeps only needed pages and uses page faults.}
+\stemrow[抖动定义]{R8.2 Thrashing}{Stem: explain. A: excessive page faults make the system spend most time paging instead of executing.}
+\stemrow[局部性意义]{R8.3 Locality}{Stem: why crucial. A: references cluster, so a small resident set can cover the active working set.}
+\stemrow[PTE字段]{R8.4 PTE fields}{Stem: typical elements. A: present/valid, modify/dirty, reference/use, frame number, protection/control.}
+\stemrow[TLB作用]{R8.5 TLB}{Stem: purpose. A: cache recent PTEs to avoid an extra memory access for every translation.}
+\stemrow[请求分页/预取]{R8.6 Fetch policies}{Stem: alternatives. A: demand paging loads on fault; prepaging loads likely-needed pages in advance.}
+\stemrow[驻留集vs置换]{R8.7 Resident/replacement}{Stem: difference. A: resident-set management chooses frame count/scope; replacement chooses the victim page.}
+\stemrow[Clock=FIFO+引用位]{R8.8 FIFO/clock}{Stem: relationship. A: clock is FIFO with a reference bit and second chance.}
+\stemrow[页缓冲目的]{R8.9 Page buffering}{Stem: purpose. A: keep replaced pages on free/modified lists for quick reuse and batched dirty writes.}
+\stemrow[固定+全局矛盾]{R8.10 Fixed+global}{Stem: why impossible. A: global replacement changes another process's frame count, violating fixed allocation.}
+\stemrow[驻留集vs工作集]{R8.11 Resident/working set}{Stem: difference. A: resident set is pages actually in memory; working set is pages used recently.}
+\stemrow[按需清除vs预清除]{R8.12 Cleaning}{Stem: demand cleaning vs precleaning. A: write dirty page at eviction vs write dirty pages before they are selected.}
 \end{stemlist}
 
 \cheatsection{Chapter 8 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P8.1 Translate}{Stem: page size 1024, given PTEs; VA 1052, 2221, 5499. A: use \(p=\lfloor a/1024\rfloor,d=a\bmod1024\); results \(7196\), page fault, \(379\).}
-\stemrow{P8.2 Arrays}{Stem: \(64\times64\) arrays, 1 KB pages, 4-page working set. A: column order gives 3 data faults per 4 assignments, total 3072; swap loops to row order gives 3 per 256, total 48.}
-\stemrow{P8.3 Table space}{Stem: Fig. 8.3 page table and hashed inverted table. A: normal user page table \(=2^{20}\times4=4\) MB; hashed table \(=64\times4\times46\) bits \(=1472\) bytes, about 1.5 KB.}
-\stemrow{P8.4 Replacement}{Stem: refs \(7,0,1,2,0,3,0,4,2,3,0,3,2\), 3 frames, count after init. A: FIFO 7 faults/70\%; LRU 6/60\%; Clock 6/60\%; OPT 4/40\%.}
-\stemrow{P8.5 FIFO anomaly}{Stem: refs A B C D A B E A B C D E. A: FIFO transfers: 3 frames \(=9\), 4 frames \(=10\); this is Belady anomaly.}
-\stemrow{P8.6 LRU vs FIFO}{Stem: 33-reference trace, 4 frames. A: both LRU and FIFO have 17 faults, 16 hits, hit ratio \(16/33\approx48.5\%\); equality is trace-specific.}
-\stemrow{P8.7 VAX tables}{Stem: user page tables in virtual memory. A: saves real memory; disadvantage is possible page fault while accessing the page table itself.}
-\stemrow{P8.10 Levels}{Stem: 64-bit address, 4 KB pages, 4-byte PTEs. A: offset 12 bits, page number 52 bits, 10 index bits per table page, so \(\lceil52/10\rceil=6\) levels.}
-\stemrow{P8.11 EMAT}{Stem: 200 ns memory, 20 ns MMU overhead, 85\% TLB hit. A: no TLB \(=400\) ns; with TLB \(=.85(220)+.15(420)=250\) ns; \(EMAT=420-200h\).}
-\stemrow{P8.12 Bounds}{Stem: length \(P\), \(N\) distinct pages, \(M\) frames. A: lower bound \(N\); upper bound \(P\), or \(N\) if \(M\ge N\).}
-\stemrow{P8.13 Snowplow}{Stem: circular snowplow analogy. A: clock algorithm; pointer clears reference bits as it moves, evicting pages not recently refreshed.}
-\stemrow{P8.14 Ref-bit LRU}{Stem: use only reference bit. A: approximate LRU with aging: periodically sample/clear reference bits and evict the lowest age counter.}
-\stemrow{P8.18 Address format}{Stem: 32 pages of 2 KB into 1 MB physical memory. A: logical address \(=5\)-bit page + \(11\)-bit offset; table \(=32\) entries \(\times9\)-bit frame; half memory makes frame field 8 bits, length unchanged.}
+\stemrow[虚拟到物理]{P8.1 Translate}{Stem: page size 1024, given PTEs; VA 1052, 2221, 5499. A: use \(p=\lfloor a/1024\rfloor,d=a\bmod1024\); results \(7196\), page fault, \(379\).}
+\stemrow[数组局部性]{P8.2 Arrays}{Stem: \(64\times64\) arrays, 1 KB pages, 4-page working set. A: column order gives 3 data faults per 4 assignments, total 3072; swap loops to row order gives 3 per 256, total 48.}
+\stemrow[页表空间]{P8.3 Table space}{Stem: Fig. 8.3 page table and hashed inverted table. A: normal user page table \(=2^{20}\times4=4\) MB; hashed table \(=64\times4\times46\) bits \(=1472\) bytes, about 1.5 KB.}
+\stemrow[置换算法计数]{P8.4 Replacement}{Stem: refs \(7,0,1,2,0,3,0,4,2,3,0,3,2\), 3 frames, count after init. A: FIFO 7 faults/70\%; LRU 6/60\%; Clock 6/60\%; OPT 4/40\%.}
+\stemrow[Belady异常]{P8.5 FIFO anomaly}{Stem: refs A B C D A B E A B C D E. A: FIFO transfers: 3 frames \(=9\), 4 frames \(=10\); this is Belady anomaly.}
+\stemrow[LRU/FIFO同分]{P8.6 LRU vs FIFO}{Stem: 33-reference trace, 4 frames. A: both LRU and FIFO have 17 faults, 16 hits, hit ratio \(16/33\approx48.5\%\); equality is trace-specific.}
+\stemrow[页表也可缺页]{P8.7 VAX tables}{Stem: user page tables in virtual memory. A: saves real memory; disadvantage is possible page fault while accessing the page table itself.}
+\stemrow[多级页表层数]{P8.10 Levels}{Stem: 64-bit address, 4 KB pages, 4-byte PTEs. A: offset 12 bits, page number 52 bits, 10 index bits per table page, so \(\lceil52/10\rceil=6\) levels.}
+\stemrow[有效访问时间]{P8.11 EMAT}{Stem: 200 ns memory, 20 ns MMU overhead, 85\% TLB hit. A: no TLB \(=400\) ns; with TLB \(=.85(220)+.15(420)=250\) ns; \(EMAT=420-200h\).}
+\stemrow[缺页上下界]{P8.12 Bounds}{Stem: length \(P\), \(N\) distinct pages, \(M\) frames. A: lower bound \(N\); upper bound \(P\), or \(N\) if \(M\ge N\).}
+\stemrow[时钟算法类比]{P8.13 Snowplow}{Stem: circular snowplow analogy. A: clock algorithm; pointer clears reference bits as it moves, evicting pages not recently refreshed.}
+\stemrow[引用位近似LRU]{P8.14 Ref-bit LRU}{Stem: use only reference bit. A: approximate LRU with aging: periodically sample/clear reference bits and evict the lowest age counter.}
+\stemrow[地址格式位数]{P8.18 Address format}{Stem: 32 pages of 2 KB into 1 MB physical memory. A: logical address \(=5\)-bit page + \(11\)-bit offset; table \(=32\) entries \(\times9\)-bit frame; half memory makes frame field 8 bits, length unchanged.}
 \end{stemlist}
 
 \cheatsection{Chapter 8 Fast Recall}
@@ -827,39 +827,79 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 \textbf{Cons}: CPU-bound jobs can be pushed down and starve unless aging or longer low-level quanta are used.
 \end{stemlist}
 
+\cheatsection{Chapter 9 Q\&A Symbols}
+\begingroup
+\cheattinyfont
+\renewcommand{\arraystretch}{0.74}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}Y@{}}
+\toprule
+\term{缩写} & \term{English} & \term{中文} & \term{含义 / 公式}\\
+\midrule
+\term{AT} & Arrival Time & 到达时间 & 进入 ready queue 的时间\\
+\term{BT / ST} & Burst Time / Service Time & 执行/服务时间 & 需要 CPU 运行的总时间\\
+\term{Start Time} & Start Time & 开始时间 & 第一次获得 CPU 的时间\\
+\term{CT / FT} & Completion / Finish Time & 完成时间 & 执行完毕的时间\\
+\term{TAT} & Turnaround Time & 周转时间 & \code{CT - AT}\\
+\term{WT} & Waiting Time & 等待时间 & \code{TAT - BT}\\
+\term{RT} & Response Time & 响应时间 & \code{Start Time - AT}\\
+\term{NTAT} & Normalized Turnaround Time & 归一化周转时间 & \code{TAT / BT}\\
+\bottomrule
+\end{tabularx}
+\endgroup
+
 \cheatsection{Chapter 9 Review Q\&A}
 \begin{stemlist}
-\stemrow{R9.1 Scheduler types}{Stem: three types. A: long-term admits jobs, medium-term swaps processes, short-term dispatches a ready process to CPU.}
-\stemrow{R9.2 Interactive OS}{Stem: critical performance requirement. A: response time.}
-\stemrow{R9.3 Turnaround/response}{Stem: difference. A: turnaround is submit/arrival to finish; response is submit/request to first visible response.}
-\stemrow{R9.4 Priority value}{Stem: low value means what. A: in this text/UNIX style, lower numeric value means higher priority.}
-\stemrow{R9.5 Preemption}{Stem: preemptive vs nonpreemptive. A: preemptive can interrupt a running process; nonpreemptive waits for finish or block.}
-\stemrow{R9.6 FCFS}{Stem: define. A: ready process waiting longest is selected first.}
-\stemrow{R9.7 RR}{Stem: define. A: each ready process gets one time quantum, then returns to the tail if unfinished.}
-\stemrow{R9.8 SPN}{Stem: define. A: nonpreemptively select the process with shortest expected service time.}
-\stemrow{R9.9 SRT}{Stem: define. A: preemptive SPN; select the process with shortest remaining time.}
-\stemrow{R9.10 HRRN}{Stem: define. A: select largest \((w+s)/s\), balancing short jobs with aging.}
-\stemrow{R9.11 Feedback}{Stem: define. A: multilevel feedback queues demote jobs that consume CPU quanta and favor short/I/O-bound jobs.}
+\stemrow[长中短调度]{R9.1 Scheduler types}{Stem: three types. A: long-term admits jobs, medium-term swaps processes, short-term dispatches a ready process to CPU.}
+\stemrow[交互看响应]{R9.2 Interactive OS}{Stem: critical performance requirement. A: response time.}
+\stemrow[周转vs响应]{R9.3 Turnaround/response}{Stem: difference. A: turnaround is submit/arrival to finish; response is submit/request to first visible response.}
+\stemrow[数值小优先级高]{R9.4 Priority value}{Stem: low value means what. A: in this text/UNIX style, lower numeric value means higher priority.}
+\stemrow[抢占vs非抢占]{R9.5 Preemption}{Stem: preemptive vs nonpreemptive. A: preemptive can interrupt a running process; nonpreemptive waits for finish or block.}
+\stemrow[先来先服务]{R9.6 FCFS}{Stem: define. A: ready process waiting longest is selected first.}
+\stemrow[时间片轮转]{R9.7 RR}{Stem: define. A: each ready process gets one time quantum, then returns to the tail if unfinished.}
+\stemrow[最短进程]{R9.8 SPN}{Stem: define. A: nonpreemptively select the process with shortest expected service time.}
+\stemrow[最短剩余]{R9.9 SRT}{Stem: define. A: preemptive SPN; select the process with shortest remaining time.}
+\stemrow[响应比公式]{R9.10 HRRN}{Stem: define. A: select largest \((w+s)/s\), balancing short jobs with aging.}
+\stemrow[多级反馈]{R9.11 Feedback}{Stem: define. A: multilevel feedback queues demote jobs that consume CPU quanta and favor short/I/O-bound jobs.}
 \end{stemlist}
 
 \cheatsection{Chapter 9 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P9.1 SRT/priority/RR}{Stem: P1--P4 workload, compute schedules and average wait. A: SRT \(0\!-\!20:P1,20\!-\!40:P2,40\!-\!70:P1,70\!-\!110:P4,110\!-\!210:P3\), avg wait \(25\) ms; nonpreemptive priority \(0\!-\!50:P1,50\!-\!70:P2,70\!-\!110:P4,110\!-\!210:P3\), avg \(27.5\) ms; RR \(q=30\): \(P1,P2,P1,P3,P4,P3,P4,P3\), avg \(42.5\) ms.}
-\stemrow{P9.2 Algorithm comparison}{Stem: A(0,3), B(1,5), C(3,2), D(9,5), E(12,5). A: finish times/mean \(T_r\)/mean NTT: FCFS \(3,8,10,15,20/6.2/1.74\); RR \(q=1\) \(6,11,8,18,20/7.6/1.98\); RR \(q=4\) \(3,10,9,19,20/7.2/1.88\); SPN and SRT \(3,10,5,15,20/5.6/1.32\); HRRN \(3,8,10,15,20/6.2/1.74\); strict feedback \(q=1\) \(7,18,6,19,20/9.0/2.17\), but feedback depends on the stated rule.}
-\stemrow{P9.3 SPN proof}{Stem: prove minimum average wait when all jobs arrive together. A: exchange adjacent jobs \(i,j\); if \(s_i\le s_j\), order \(i,j\) contributes \(2T+s_i\) wait, while \(j,i\) gives \(2T+s_j\). Repeated swaps yield shortest-first.}
-\stemrow{P9.4 Exponential average}{Stem: bursts \(6,4,6,4,13,13,13\), initial 10. A: \(S_{n+1}=\alpha T_n+(1-\alpha)S_n\); larger \(\alpha\) follows recent bursts faster. For \(\alpha=.5\): \(8,6,6,5,9,11,12\); for \(\alpha=.8\): \(6.8,4.56,5.712,4.342,11.268,12.654,12.931\).}
-\stemrow{P9.5 Bounded estimate}{Stem: roles of \(\alpha,\beta\) in bounded SPN estimate. A: \(\alpha\) controls smoothing vs responsiveness; \(\beta\) scales the estimate before clamping to lower/upper bounds, biasing a job to look shorter or longer.}
-\stemrow{P9.6 Feedback variant}{Stem: why A may run 2 or 3 units before B. A: if a new high-priority job immediately preempts a lower-priority running job, A stops after 2; if rescheduling waits for the current quantum to expire, A may run 3.}
-\stemrow{P9.7 Minimax RR}{Stem: derive minimax response-ratio scheduling. A: build the order backward; at each step, choose as last the job with the smallest response ratio at the current final completion time, remove it, and repeat.}
-\stemrow{P9.8 Minimax proof}{Stem: prove preceding algorithm. A: any schedule's last job has ratio fixed by the final time; choosing the minimum possible last ratio gives the best upper bound, then induction applies to the remaining jobs.}
-\stemrow{P9.9 FIFO residence}{Stem: show FIFO \(T_r=T_s/(1-\rho)\). A: M/M/1 gives \(W_q=\rho T_s/(1-\rho)\); add service time, so \(T_r=T_s+W_q=T_s/(1-\rho)\).}
-\stemrow{P9.10 Ideal RR}{Stem: processor-sharing RR with infinitesimal quantum. A: Poisson/exponential processor sharing gives conditional mean response \(R_x=x/(1-\rho)\); RR stretches service by factor \(1/(1-\rho)\).}
-\stemrow{P9.11 Duplicate PCB pointers}{Stem: same process appears twice in RR queue. A: it gets two quanta per cycle; advantage is weighted RR; equivalent design is a weight field or enlarged effective quantum.}
-\stemrow{P9.12 Selfish RR}{Stem: derive selfish RR response time. A: with \(\rho=\lambda s\), \(\rho'=\rho(1-b/a)\), \(0\le b<a\), \(R_x=\frac{s}{1-\rho}+\frac{x-s}{1-\rho'}\).}
-\stemrow{P9.13 Dynamic RR quantum}{Stem: divide max response time by ready-process count. A: only a rough heuristic; changing arrivals, swap time, and dispatch overhead can break the response guarantee and make quanta too small.}
-\stemrow{P9.14 Feedback favors}{Stem: CPU-bound or I/O-bound. A: I/O-bound/interactive processes, because they block before using full quanta and avoid demotion.}
-\stemrow{P9.15 Dekker danger}{Stem: static priority plus busy waiting. A: priority inversion/starvation: a high-priority spinner can keep the low-priority process from running and leaving the critical section.}
-\stemrow{P9.16 Batch turnaround}{Stem: jobs A--E times \(15,9,3,6,12\), priorities \(6,3,7,9,4\). A: RR \(q=1\): A45 B35 C13 D26 E42 avg 32.2; priority order B,E,A,C,D gives A36 B9 C39 D45 E21 avg 30; FCFS gives A15 B24 C27 D33 E45 avg 28.8; SJF order C,D,B,E,A gives A45 B18 C3 D9 E30 avg 21.}
+\par\noindent\term[甘特图+平均等待]{P9.1 SRT/priority/RR}: \textbf{Question}: workload below. Show SRT, nonpreemptive priority(smaller number = higher priority), RR \(q=30\) ms; compute average WT.
+\begin{tabularx}{\linewidth}{@{}lrrrr@{}}
+\toprule
+P & P1 & P2 & P3 & P4\\
+\midrule
+BT & 50 & 20 & 100 & 40\\
+Priority & 4 & 1 & 3 & 2\\
+AT & 0 & 20 & 40 & 60\\
+\bottomrule
+\end{tabularx}
+\textbf{Formula}: \(WT=FT-AT-BT\).\\
+\textbf{SRT}: compare remaining time at arrivals. Gantt: \(0\!-\!20:P1\,|\,20\!-\!40:P2\,|\,40\!-\!70:P1\,|\,70\!-\!110:P4\,|\,110\!-\!210:P3\). FT \(=(70,40,210,110)\); WT \(=(20,0,70,10)\); avg \(=25\) ms.\\
+\textbf{Priority}: nonpreemptive, so P1 finishes first; then priority order P2, P4, P3. Gantt: \(0\!-\!50:P1\,|\,50\!-\!70:P2\,|\,70\!-\!110:P4\,|\,110\!-\!210:P3\). WT \(=(0,30,70,10)\); avg \(=27.5\) ms.\\
+\textbf{RR \(q=30\)}: unfinished process returns to queue tail. Gantt: \(0\!-\!30:P1\,|\,30\!-\!50:P2\,|\,50\!-\!70:P1\,|\,70\!-\!100:P3\,|\,100\!-\!130:P4\,|\,130\!-\!160:P3\,|\,160\!-\!170:P4\,|\,170\!-\!210:P3\). WT \(=(20,10,70,70)\); avg \(=42.5\) ms.
+
+\par\noindent\term[多算法对比]{P9.2 Algorithm comparison}: \textbf{Question}: processes \(A(AT=0,BT=3), B(1,5), C(3,2), D(9,5), E(12,5)\). Compute Gantt, finish time, mean TAT, mean NTAT.
+\textbf{Formulas}: \(TAT=FT-AT,\quad NTAT=TAT/BT\).\\
+\textbf{FCFS}: \(0\!-\!3:A\,|\,3\!-\!8:B\,|\,8\!-\!10:C\,|\,10\!-\!15:D\,|\,15\!-\!20:E\). FT \(=(3,8,10,15,20)\); TAT \(=(3,7,7,6,8)\); mean \(=6.2\); mean NTAT \(=1.74\).\\
+\textbf{RR \(q=1\)}: unit Gantt: A B A B C A B C B D / B D E D E D E D E E. FT \(=(6,11,8,18,20)\); TAT \(=(6,10,5,9,8)\); mean \(=7.6\); mean NTAT \(=1.98\).\\
+\textbf{RR \(q=4\)}: \(0\!-\!3:A\,|\,3\!-\!7:B\,|\,7\!-\!9:C\,|\,9\!-\!10:B\,|\,10\!-\!14:D\,|\,14\!-\!18:E\,|\,18\!-\!19:D\,|\,19\!-\!20:E\). FT \(=(3,10,9,19,20)\); mean TAT \(=7.2\); mean NTAT \(=1.88\).\\
+\textbf{SPN/SRT}: \(0\!-\!3:A\,|\,3\!-\!5:C\,|\,5\!-\!10:B\,|\,10\!-\!15:D\,|\,15\!-\!20:E\). FT \(=(3,10,5,15,20)\); mean TAT \(=5.6\); mean NTAT \(=1.32\). SRT same here because no later job has shorter remaining time.\\
+\textbf{HRRN}: choose largest \((w+s)/s\). Gantt: \(0\!-\!3:A\,|\,3\!-\!8:B\,|\,8\!-\!10:C\,|\,10\!-\!15:D\,|\,15\!-\!20:E\). FT \(=(3,8,10,15,20)\); mean TAT \(=6.2\); mean NTAT \(=1.74\). Feedback results depend on exact queue/demotion rule; one strict \(q=1\) convention gives FT \(=(7,18,6,19,20)\), mean TAT \(=9.0\), mean NTAT \(=2.17\).
+\stemrow[SPN最优交换证明]{P9.3 SPN proof}{Stem: prove minimum average wait when all jobs arrive together. A: exchange adjacent jobs \(i,j\); if \(s_i\le s_j\), order \(i,j\) contributes \(2T+s_i\) wait, while \(j,i\) gives \(2T+s_j\). Repeated swaps yield shortest-first.}
+\stemrow[指数平均预测]{P9.4 Exponential average}{Stem: bursts \(6,4,6,4,13,13,13\), initial 10. A: \(S_{n+1}=\alpha T_n+(1-\alpha)S_n\); larger \(\alpha\) follows recent bursts faster. For \(\alpha=.5\): \(8,6,6,5,9,11,12\); for \(\alpha=.8\): \(6.8,4.56,5.712,4.342,11.268,12.654,12.931\).}
+\stemrow[估计参数]{P9.5 Bounded estimate}{Stem: roles of \(\alpha,\beta\) in bounded SPN estimate. A: \(\alpha\) controls smoothing vs responsiveness; \(\beta\) scales the estimate before clamping to lower/upper bounds, biasing a job to look shorter or longer.}
+\stemrow[反馈抢占细节]{P9.6 Feedback variant}{Stem: why A may run 2 or 3 units before B. A: if a new high-priority job immediately preempts a lower-priority running job, A stops after 2; if rescheduling waits for the current quantum to expire, A may run 3.}
+\stemrow[最小最大响应比]{P9.7 Minimax RR}{Stem: derive minimax response-ratio scheduling. A: build the order backward; at each step, choose as last the job with the smallest response ratio at the current final completion time, remove it, and repeat.}
+\stemrow[逆序归纳证明]{P9.8 Minimax proof}{Stem: prove preceding algorithm. A: any schedule's last job has ratio fixed by the final time; choosing the minimum possible last ratio gives the best upper bound, then induction applies to the remaining jobs.}
+\stemrow[排队论周转]{P9.9 FIFO residence}{Stem: show FIFO \(T_r=T_s/(1-\rho)\). A: M/M/1 gives \(W_q=\rho T_s/(1-\rho)\); add service time, so \(T_r=T_s+W_q=T_s/(1-\rho)\).}
+\stemrow[理想RR伸缩]{P9.10 Ideal RR}{Stem: processor-sharing RR with infinitesimal quantum. A: Poisson/exponential processor sharing gives conditional mean response \(R_x=x/(1-\rho)\); RR stretches service by factor \(1/(1-\rho)\).}
+\stemrow[加权RR]{P9.11 Duplicate PCB pointers}{Stem: same process appears twice in RR queue. A: it gets two quanta per cycle; advantage is weighted RR; equivalent design is a weight field or enlarged effective quantum.}
+\stemrow[Selfish RR公式]{P9.12 Selfish RR}{Stem: derive selfish RR response time. A: with \(\rho=\lambda s\), \(\rho'=\rho(1-b/a)\), \(0\le b<a\), \(R_x=\frac{s}{1-\rho}+\frac{x-s}{1-\rho'}\).}
+\stemrow[动态时间片风险]{P9.13 Dynamic RR quantum}{Stem: divide max response time by ready-process count. A: only a rough heuristic; changing arrivals, swap time, and dispatch overhead can break the response guarantee and make quanta too small.}
+\stemrow[反馈偏I/O型]{P9.14 Feedback favors}{Stem: CPU-bound or I/O-bound. A: I/O-bound/interactive processes, because they block before using full quanta and avoid demotion.}
+\stemrow[优先级反转]{P9.15 Dekker danger}{Stem: static priority plus busy waiting. A: priority inversion/starvation: a high-priority spinner can keep the low-priority process from running and leaving the critical section.}
+\stemrow[批处理周转时间]{P9.16 Batch turnaround}{Stem: jobs A--E times \(15,9,3,6,12\), priorities \(6,3,7,9,4\). A: RR \(q=1\): A45 B35 C13 D26 E42 avg 32.2; priority order B,E,A,C,D gives A36 B9 C39 D45 E21 avg 30; FCFS gives A15 B24 C27 D33 E45 avg 28.8; SJF order C,D,B,E,A gives A45 B18 C3 D9 E30 avg 21.}
 \end{stemlist}
 
 \cheatsection{Chapter 9 Fast Recall}
@@ -904,14 +944,14 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 
 \cheatsection{Chapter 10 Review Q\&A}
 \begin{stemlist}
-\stemrow{R10.1 Granularity}{Stem: five synchronization granularities. A: fine, medium, coarse, very coarse, and independent parallelism; finer granularity means more frequent synchronization.}
-\stemrow{R10.2 Thread scheduling}{Stem: four thread-scheduling techniques. A: load sharing, gang scheduling, dedicated processor assignment, and dynamic scheduling.}
-\stemrow{R10.3 Load sharing versions}{Stem: three load-sharing versions. A: FCFS shared queue; smallest number of threads first; preemptive smallest number of threads first.}
-\stemrow{R10.4 Hard vs soft RT}{Stem: hard vs soft real-time tasks. A: hard tasks must meet deadlines; soft tasks prefer deadlines but late completion can still be useful.}
-\stemrow{R10.5 Periodic vs aperiodic}{Stem: periodic vs aperiodic tasks. A: periodic tasks recur every period \(T\); aperiodic tasks arrive irregularly but still have timing constraints.}
-\stemrow{R10.6 RTOS requirements}{Stem: five RTOS requirement areas. A: deterministic behavior, fast response, user control over priorities/resources, high reliability, and graceful fail-soft degradation.}
-\stemrow{R10.7 RT algorithms}{Stem: four real-time scheduling classes. A: static table-driven, static priority-driven preemptive, dynamic planning-based, and dynamic best-effort scheduling.}
-\stemrow{R10.8 Task data}{Stem: task information useful for real-time scheduling. A: ready time, starting/completion deadline, processing time, resource needs, priority, periodicity, and subtask/dependency structure.}
+\stemrow[同步粒度]{R10.1 Granularity}{Stem: five synchronization granularities. A: fine, medium, coarse, very coarse, and independent parallelism; finer granularity means more frequent synchronization.}
+\stemrow[四种线程调度]{R10.2 Thread scheduling}{Stem: four thread-scheduling techniques. A: load sharing, gang scheduling, dedicated processor assignment, and dynamic scheduling.}
+\stemrow[负载共享变体]{R10.3 Load sharing versions}{Stem: three load-sharing versions. A: FCFS shared queue; smallest number of threads first; preemptive smallest number of threads first.}
+\stemrow[硬实时vs软实时]{R10.4 Hard vs soft RT}{Stem: hard vs soft real-time tasks. A: hard tasks must meet deadlines; soft tasks prefer deadlines but late completion can still be useful.}
+\stemrow[周期vs非周期]{R10.5 Periodic vs aperiodic}{Stem: periodic vs aperiodic tasks. A: periodic tasks recur every period \(T\); aperiodic tasks arrive irregularly but still have timing constraints.}
+\stemrow[RTOS五要求]{R10.6 RTOS requirements}{Stem: five RTOS requirement areas. A: deterministic behavior, fast response, user control over priorities/resources, high reliability, and graceful fail-soft degradation.}
+\stemrow[实时调度类别]{R10.7 RT algorithms}{Stem: four real-time scheduling classes. A: static table-driven, static priority-driven preemptive, dynamic planning-based, and dynamic best-effort scheduling.}
+\stemrow[实时任务参数]{R10.8 Task data}{Stem: task information useful for real-time scheduling. A: ready time, starting/completion deadline, processing time, resource needs, priority, periodicity, and subtask/dependency structure.}
 \end{stemlist}
 
 \cheatsection{Chapter 10 Fast Recall}
@@ -986,34 +1026,34 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 
 \cheatsection{Chapter 12 Review Q\&A}
 \begin{stemlist}
-\stemrow{R12.1 Field/record}{Stem: difference. A: a field is one data item; a record is related fields treated as one unit.}
-\stemrow{R12.2 File/database}{Stem: difference. A: a file is similar records; a database is related data, often several files with explicit relationships.}
-\stemrow{R12.3 FMS}{Stem: define file management system. A: OS software that provides file creation, deletion, access, modification, protection, sharing, backup, and recovery.}
-\stemrow{R12.4 Organization criteria}{Stem: choosing file organization. A: short access time, ease of update, storage economy, simple maintenance, and reliability.}
-\stemrow{R12.5 Five organizations}{Stem: list and define. A: pile = arrival/full scan; sequential = key-sorted/batch; indexed sequential = index+overflow/faster lookup; indexed = multiple indexes/fields; direct/hashed = hash key to location.}
-\stemrow{R12.6 Indexed sequential search}{Stem: why faster than sequential. A: the index jumps near the target, so only a small local sequential search remains.}
-\stemrow{R12.7 Directory ops}{Stem: typical operations. A: search, create file, delete file, list directory, and update directory.}
-\stemrow{R12.8 Path/working dir}{Stem: relationship. A: a relative pathname is resolved from the working directory; an absolute pathname starts at root.}
-\stemrow{R12.9 Access rights}{Stem: typical rights. A: none, knowledge, execution, reading, appending, updating, changing protection, deletion.}
-\stemrow{R12.10 Blocking}{Stem: three methods. A: fixed; variable-length spanned; variable-length unspanned.}
-\stemrow{R12.11 Allocation}{Stem: three methods. A: contiguous, chained, and indexed file allocation.}
+\stemrow[字段vs记录]{R12.1 Field/record}{Stem: difference. A: a field is one data item; a record is related fields treated as one unit.}
+\stemrow[文件vs数据库]{R12.2 File/database}{Stem: difference. A: a file is similar records; a database is related data, often several files with explicit relationships.}
+\stemrow[文件管理系统]{R12.3 FMS}{Stem: define file management system. A: OS software that provides file creation, deletion, access, modification, protection, sharing, backup, and recovery.}
+\stemrow[组织选择标准]{R12.4 Organization criteria}{Stem: choosing file organization. A: short access time, ease of update, storage economy, simple maintenance, and reliability.}
+\stemrow[五种文件组织]{R12.5 Five organizations}{Stem: list and define. A: pile = arrival/full scan; sequential = key-sorted/batch; indexed sequential = index+overflow/faster lookup; indexed = multiple indexes/fields; direct/hashed = hash key to location.}
+\stemrow[索引顺序查找]{R12.6 Indexed sequential search}{Stem: why faster than sequential. A: the index jumps near the target, so only a small local sequential search remains.}
+\stemrow[目录操作]{R12.7 Directory ops}{Stem: typical operations. A: search, create file, delete file, list directory, and update directory.}
+\stemrow[路径和工作目录]{R12.8 Path/working dir}{Stem: relationship. A: a relative pathname is resolved from the working directory; an absolute pathname starts at root.}
+\stemrow[访问权限列表]{R12.9 Access rights}{Stem: typical rights. A: none, knowledge, execution, reading, appending, updating, changing protection, deletion.}
+\stemrow[三种记录分块]{R12.10 Blocking}{Stem: three methods. A: fixed; variable-length spanned; variable-length unspanned.}
+\stemrow[三种块分配]{R12.11 Allocation}{Stem: three methods. A: contiguous, chained, and indexed file allocation.}
 \end{stemlist}
 
 \cheatsection{Chapter 12 Problem Q\&A}
 \begin{stemlist}
-\stemrow{P12.1 Blocking factor}{Stem: \(B,R,P\)=block/record/pointer sizes; \(F\)=blocking factor. A: fixed/unspanned \(F\approx\lfloor B/R\rfloor\); spanned \(F\approx(B-P)/R\).}
-\stemrow{P12.2 Growing portions}{Stem: portions \(1,2,4,\ldots\), \(n\) records, blocking factor \(F\). A: let \(m=\lceil n/F\rceil\) blocks; FAT entries \(\le\lceil\log_2(m+1)\rceil\); just after a new portion, unused space is at most that portion minus one block/record unit, less than half allocated.}
-\stemrow{P12.3 Choose organization}{Stem: choose org for speed/storage/update: (a) infrequent update + frequent random access; (b) frequent update + frequent whole-file access; (c) frequent update + frequent random access. A: (a) direct/hashed, or indexed for multiple keys; (b) indexed sequential; (c) indexed, or hashed for one exact key.}
-\stemrow{P12.4 Insert 97}{Stem: B-tree insert. A: insert into full right leaf, split \([73,85,88,90,96,97]\) at 88; root also full, split at 51; new root \([51]\), right child includes \([61,71,88]\).}
-\stemrow{P12.5 Top-down split}{Stem: split every full node while descending. A: advantage: no backtracking and simpler one-pass insertion; disadvantages: unnecessary splits, extra writes, lower occupancy, possible earlier height growth.}
-\stemrow{P12.6 B-tree height}{Stem: upper bound on height. A: worst case has minimum occupancy, so \(n\ge2d^h-1\) and \(h\le\log_d((n+1)/2)\), with root-to-leaf edge height.}
-\stemrow{P12.7 Last-block waste}{Stem: 16K blocks; \(S=41{,}600;640{,}000;4{,}064{,}000\). A: \(A=\lceil S/16K\rceil16K\), \(W\%=(A-S)/A\); \(15.36\%,2.34\%,0.383\%\).}
-\stemrow{P12.8 Directory benefits}{Stem: advantages. A: symbolic names, name-to-location mapping, hierarchy, fewer name conflicts, access control, easier search/list/update.}
-\stemrow{P12.9 Directory file type}{Stem: special file vs ordinary file. A: special protects format/integrity but is less flexible; ordinary gives uniform tools but risks corruption unless strongly protected.}
-\stemrow{P12.10 Limited depth}{Stem: effect of shallow tree. A: users lose deep organization and long paths; OS gains simpler pathname parsing, bounded buffers/tables, and less recursive traversal.}
-\stemrow{P12.11 Lost free pointer}{Stem: hierarchical FS keeps free disk space in a free-space list: (a) if pointer to free space is lost, can system reconstruct the list? (b) scheme so pointer is never lost from one memory failure. A: scan directories/FAT/inodes, mark allocated blocks, rebuild unmarked free blocks; store redundant logged/checksummed pointer copies in stable storage.}
-\stemrow{P12.12 UNIX V max file}{Stem: In UNIX System V, block length is 1 KB and each block holds 256 block addresses; using the inode scheme, find the maximum file size. A: with 10 direct plus single/double/triple indirect, max \(=(10+256+256^2+256^3)\times1024=17{,}247{,}250{,}432\) bytes, about 16.06 GiB.}
-\stemrow{P12.13 8K inode}{Stem: UNIX inode: 12 direct pointers plus single/double/triple indirect; block=sector=8K; 32-bit disk pointer = 8-bit disk ID + 24-bit block ID. Find (a) max file size, (b) max partition size, (c) disk accesses for byte 13,423,956 when inode is already in memory. A: pointers/block \(=2048\); max file \(=(12+2048+2048^2+2048^3)8K=70{,}403{,}120{,}791{,}552\) bytes. Partition limit is 128 GiB per 24-bit block field per disk, or 32 TiB using all 8 disk bits. Byte 13,423,956 is in the single-indirect range, so read indirect block + data block = 2 disk accesses.}
+\stemrow[分块因子公式]{P12.1 Blocking factor}{Stem: \(B,R,P\)=block/record/pointer sizes; \(F\)=blocking factor. A: fixed/unspanned \(F\approx\lfloor B/R\rfloor\); spanned \(F\approx(B-P)/R\).}
+\stemrow[增长区段/FAT项]{P12.2 Growing portions}{Stem: portions \(1,2,4,\ldots\), \(n\) records, blocking factor \(F\). A: let \(m=\lceil n/F\rceil\) blocks; FAT entries \(\le\lceil\log_2(m+1)\rceil\); just after a new portion, unused space is at most that portion minus one block/record unit, less than half allocated.}
+\stemrow[按场景选组织]{P12.3 Choose organization}{Stem: choose org for speed/storage/update: (a) infrequent update + frequent random access; (b) frequent update + frequent whole-file access; (c) frequent update + frequent random access. A: (a) direct/hashed, or indexed for multiple keys; (b) indexed sequential; (c) indexed, or hashed for one exact key.}
+\stemrow[B树插入分裂]{P12.4 Insert 97}{Stem: B-tree insert. A: insert into full right leaf, split \([73,85,88,90,96,97]\) at 88; root also full, split at 51; new root \([51]\), right child includes \([61,71,88]\).}
+\stemrow[自顶向下分裂]{P12.5 Top-down split}{Stem: split every full node while descending. A: advantage: no backtracking and simpler one-pass insertion; disadvantages: unnecessary splits, extra writes, lower occupancy, possible earlier height growth.}
+\stemrow[B树高度上界]{P12.6 B-tree height}{Stem: upper bound on height. A: worst case has minimum occupancy, so \(n\ge2d^h-1\) and \(h\le\log_d((n+1)/2)\), with root-to-leaf edge height.}
+\stemrow[最后块浪费]{P12.7 Last-block waste}{Stem: 16K blocks; \(S=41{,}600;640{,}000;4{,}064{,}000\). A: \(A=\lceil S/16K\rceil16K\), \(W\%=(A-S)/A\); \(15.36\%,2.34\%,0.383\%\).}
+\stemrow[目录优点]{P12.8 Directory benefits}{Stem: advantages. A: symbolic names, name-to-location mapping, hierarchy, fewer name conflicts, access control, easier search/list/update.}
+\stemrow[目录特殊/普通文件]{P12.9 Directory file type}{Stem: special file vs ordinary file. A: special protects format/integrity but is less flexible; ordinary gives uniform tools but risks corruption unless strongly protected.}
+\stemrow[限制目录深度]{P12.10 Limited depth}{Stem: effect of shallow tree. A: users lose deep organization and long paths; OS gains simpler pathname parsing, bounded buffers/tables, and less recursive traversal.}
+\stemrow[空闲指针丢失恢复]{P12.11 Lost free pointer}{Stem: hierarchical FS keeps free disk space in a free-space list: (a) if pointer to free space is lost, can system reconstruct the list? (b) scheme so pointer is never lost from one memory failure. A: scan directories/FAT/inodes, mark allocated blocks, rebuild unmarked free blocks; store redundant logged/checksummed pointer copies in stable storage.}
+\stemrow[UNIX V最大文件]{P12.12 UNIX V max file}{Stem: In UNIX System V, block length is 1 KB and each block holds 256 block addresses; using the inode scheme, find the maximum file size. A: with 10 direct plus single/double/triple indirect, max \(=(10+256+256^2+256^3)\times1024=17{,}247{,}250{,}432\) bytes, about 16.06 GiB.}
+\stemrow[inode容量/访问次数]{P12.13 8K inode}{Stem: UNIX inode: 12 direct pointers plus single/double/triple indirect; block=sector=8K; 32-bit disk pointer = 8-bit disk ID + 24-bit block ID. Find (a) max file size, (b) max partition size, (c) disk accesses for byte 13,423,956 when inode is already in memory. A: pointers/block \(=2048\); max file \(=(12+2048+2048^2+2048^3)8K=70{,}403{,}120{,}791{,}552\) bytes. Partition limit is 128 GiB per 24-bit block field per disk, or 32 TiB using all 8 disk bits. Byte 13,423,956 is in the single-indirect range, so read indirect block + data block = 2 disk accesses.}
 \end{stemlist}
 
 \end{multicols*}
