@@ -758,6 +758,74 @@ Offset \(d\) is copied unchanged; the page table maps page \(p\) to frame \(f\).
   \item Clean victims avoid write-back I/O; dirty victims must be written first.
 \end{itemize}
 
+\cheatsection{9 Uniprocessor Scheduling}
+\cheatsubsection{Schedulers and Criteria}
+\term{Long-term scheduler}: admits jobs to the system and controls the degree of multiprogramming.\\
+\term{Medium-term scheduler}: swaps processes in/out of main memory and manages suspended states.\\
+\term{Short-term scheduler / dispatcher}: chooses the next ready process to run; invoked most often.\\
+\term{Criteria}: response time, turnaround time, throughput, processor utilization, fairness, predictability, deadlines.
+\[
+T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
+\]
+\term{Priority}: in this text, a smaller priority value usually means higher priority. \term{Aging} raises long-waiting jobs to prevent starvation.
+
+\cheatsubsection{Decision Modes and Algorithms}
+\term{Nonpreemptive}: current process runs until completion or blocking. \term{Preemptive}: OS can interrupt the running process.\\
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{FCFS/FIFO} & nonpreemptive; oldest ready job first; simple, but convoy effect hurts short and I/O-bound jobs.\\
+\term{RR} & preemptive; each process gets a time quantum; too small means high overhead, too large becomes FCFS.\\
+\term{SPN/SJF} & nonpreemptive; shortest expected service next; low mean wait, but long jobs may starve.\\
+\term{SRT} & preemptive SPN; always run the job with least remaining time.\\
+\term{HRRN} & nonpreemptive; choose max \(R=(w+s)/s=1+w/s\); favors short jobs and old jobs.\\
+\term{Feedback} & multilevel queues; new jobs start high, CPU-heavy jobs are demoted; I/O-bound jobs are favored.\\
+\bottomrule
+\end{tabularx}
+
+\cheatsection{Chapter 9 Review Q\&A}
+\begin{stemlist}
+\stemrow{R9.1 Scheduler types}{Stem: three types. A: long-term admits jobs, medium-term swaps processes, short-term dispatches a ready process to CPU.}
+\stemrow{R9.2 Interactive OS}{Stem: critical performance requirement. A: response time.}
+\stemrow{R9.3 Turnaround/response}{Stem: difference. A: turnaround is submit/arrival to finish; response is submit/request to first visible response.}
+\stemrow{R9.4 Priority value}{Stem: low value means what. A: in this text/UNIX style, lower numeric value means higher priority.}
+\stemrow{R9.5 Preemption}{Stem: preemptive vs nonpreemptive. A: preemptive can interrupt a running process; nonpreemptive waits for finish or block.}
+\stemrow{R9.6 FCFS}{Stem: define. A: ready process waiting longest is selected first.}
+\stemrow{R9.7 RR}{Stem: define. A: each ready process gets one time quantum, then returns to the tail if unfinished.}
+\stemrow{R9.8 SPN}{Stem: define. A: nonpreemptively select the process with shortest expected service time.}
+\stemrow{R9.9 SRT}{Stem: define. A: preemptive SPN; select the process with shortest remaining time.}
+\stemrow{R9.10 HRRN}{Stem: define. A: select largest \((w+s)/s\), balancing short jobs with aging.}
+\stemrow{R9.11 Feedback}{Stem: define. A: multilevel feedback queues demote jobs that consume CPU quanta and favor short/I/O-bound jobs.}
+\end{stemlist}
+
+\cheatsection{Chapter 9 Problem Q\&A}
+\begin{stemlist}
+\stemrow{P9.1 SRT/priority/RR}{Stem: P1--P4 workload, compute schedules and average wait. A: SRT \(0\!-\!20:P1,20\!-\!40:P2,40\!-\!70:P1,70\!-\!110:P4,110\!-\!210:P3\), avg wait \(25\) ms; nonpreemptive priority \(0\!-\!50:P1,50\!-\!70:P2,70\!-\!110:P4,110\!-\!210:P3\), avg \(27.5\) ms; RR \(q=30\): \(P1,P2,P1,P3,P4,P3,P4,P3\), avg \(42.5\) ms.}
+\stemrow{P9.2 Algorithm comparison}{Stem: A(0,3), B(1,5), C(3,2), D(9,5), E(12,5). A: finish times/mean \(T_r\)/mean NTT: FCFS \(3,8,10,15,20/6.2/1.74\); RR \(q=1\) \(6,11,8,18,20/7.6/1.98\); RR \(q=4\) \(3,10,9,19,20/7.2/1.88\); SPN and SRT \(3,10,5,15,20/5.6/1.32\); HRRN \(3,8,10,15,20/6.2/1.74\); strict feedback \(q=1\) \(7,18,6,19,20/9.0/2.17\), but feedback depends on the stated rule.}
+\stemrow{P9.3 SPN proof}{Stem: prove minimum average wait when all jobs arrive together. A: exchange adjacent jobs \(i,j\); if \(s_i\le s_j\), order \(i,j\) contributes \(2T+s_i\) wait, while \(j,i\) gives \(2T+s_j\). Repeated swaps yield shortest-first.}
+\stemrow{P9.4 Exponential average}{Stem: bursts \(6,4,6,4,13,13,13\), initial 10. A: \(S_{n+1}=\alpha T_n+(1-\alpha)S_n\); larger \(\alpha\) follows recent bursts faster. For \(\alpha=.5\): \(8,6,6,5,9,11,12\); for \(\alpha=.8\): \(6.8,4.56,5.712,4.342,11.268,12.654,12.931\).}
+\stemrow{P9.5 Bounded estimate}{Stem: roles of \(\alpha,\beta\) in bounded SPN estimate. A: \(\alpha\) controls smoothing vs responsiveness; \(\beta\) scales the estimate before clamping to lower/upper bounds, biasing a job to look shorter or longer.}
+\stemrow{P9.6 Feedback variant}{Stem: why A may run 2 or 3 units before B. A: if a new high-priority job immediately preempts a lower-priority running job, A stops after 2; if rescheduling waits for the current quantum to expire, A may run 3.}
+\stemrow{P9.7 Minimax RR}{Stem: derive minimax response-ratio scheduling. A: build the order backward; at each step, choose as last the job with the smallest response ratio at the current final completion time, remove it, and repeat.}
+\stemrow{P9.8 Minimax proof}{Stem: prove preceding algorithm. A: any schedule's last job has ratio fixed by the final time; choosing the minimum possible last ratio gives the best upper bound, then induction applies to the remaining jobs.}
+\stemrow{P9.9 FIFO residence}{Stem: show FIFO \(T_r=T_s/(1-\rho)\). A: M/M/1 gives \(W_q=\rho T_s/(1-\rho)\); add service time, so \(T_r=T_s+W_q=T_s/(1-\rho)\).}
+\stemrow{P9.10 Ideal RR}{Stem: processor-sharing RR with infinitesimal quantum. A: Poisson/exponential processor sharing gives conditional mean response \(R_x=x/(1-\rho)\); RR stretches service by factor \(1/(1-\rho)\).}
+\stemrow{P9.11 Duplicate PCB pointers}{Stem: same process appears twice in RR queue. A: it gets two quanta per cycle; advantage is weighted RR; equivalent design is a weight field or enlarged effective quantum.}
+\stemrow{P9.12 Selfish RR}{Stem: derive selfish RR response time. A: with \(\rho=\lambda s\), \(\rho'=\rho(1-b/a)\), \(0\le b<a\), \(R_x=\frac{s}{1-\rho}+\frac{x-s}{1-\rho'}\).}
+\stemrow{P9.13 Dynamic RR quantum}{Stem: divide max response time by ready-process count. A: only a rough heuristic; changing arrivals, swap time, and dispatch overhead can break the response guarantee and make quanta too small.}
+\stemrow{P9.14 Feedback favors}{Stem: CPU-bound or I/O-bound. A: I/O-bound/interactive processes, because they block before using full quanta and avoid demotion.}
+\stemrow{P9.15 Dekker danger}{Stem: static priority plus busy waiting. A: priority inversion/starvation: a high-priority spinner can keep the low-priority process from running and leaving the critical section.}
+\stemrow{P9.16 Batch turnaround}{Stem: jobs A--E times \(15,9,3,6,12\), priorities \(6,3,7,9,4\). A: RR \(q=1\): A45 B35 C13 D26 E42 avg 32.2; priority order B,E,A,C,D gives A36 B9 C39 D45 E21 avg 30; FCFS gives A15 B24 C27 D33 E45 avg 28.8; SJF order C,D,B,E,A gives A45 B18 C3 D9 E30 avg 21.}
+\end{stemlist}
+
+\cheatsection{Chapter 9 Fast Recall}
+\begin{itemize}
+  \item Long-term controls admission; medium-term controls swapping; short-term chooses the next ready process.
+  \item Turnaround \(=finish-arrival\); normalized turnaround \(=T_r/T_s\); waiting \(=finish-arrival-service\).
+  \item RR needs a useful quantum: small improves response but raises overhead; large approaches FCFS.
+  \item SPN/SRT improve average wait for short jobs but need burst estimates and may starve long jobs.
+  \item HRRN adds aging through \(1+w/s\); feedback favors short and I/O-bound processes without knowing burst length.
+\end{itemize}
+
 \end{multicols*}
 
 \end{document}
