@@ -8,4 +8,6 @@
 !*.tex
 !*.md
 !*.pdf
+!chapter3-seven-state.png
+!chapter3-seven-state.svg
 !.gitignore

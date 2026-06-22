@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="450" viewBox="0 0 760 450">
+  <defs>
+    <radialGradient id="stateFill" cx="45%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#c9faf4"/>
+      <stop offset="0.45" stop-color="#24b8ad"/>
+      <stop offset="1" stop-color="#006b73"/>
+    </radialGradient>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#111111"/>
+    </marker>
+  </defs>
+  <rect width="760" height="450" fill="#ffffff"/>
+
+  <ellipse cx="205" cy="45" rx="50" ry="24" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="205" y="50" text-anchor="middle" font-family="Times New Roman, serif" font-size="17">New</text>
+
+  <ellipse cx="105" cy="215" rx="50" ry="25" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="105" y="211" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Ready/</text>
+  <text x="105" y="228" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">suspend</text>
+
+  <ellipse cx="305" cy="215" rx="50" ry="24" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="305" y="220" text-anchor="middle" font-family="Times New Roman, serif" font-size="17">Ready</text>
+
+  <ellipse cx="500" cy="215" rx="50" ry="24" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="500" y="220" text-anchor="middle" font-family="Times New Roman, serif" font-size="17">Running</text>
+
+  <ellipse cx="680" cy="215" rx="50" ry="24" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="680" y="220" text-anchor="middle" font-family="Times New Roman, serif" font-size="17">Exit</text>
+
+  <ellipse cx="105" cy="385" rx="50" ry="25" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="105" y="381" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Blocked/</text>
+  <text x="105" y="398" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">suspend</text>
+
+  <ellipse cx="305" cy="385" rx="50" ry="24" fill="url(#stateFill)" stroke="#00727a" stroke-width="1.5"/>
+  <text x="305" y="390" text-anchor="middle" font-family="Times New Roman, serif" font-size="17">Blocked</text>
+
+  <line x1="185" y1="66" x2="120" y2="189" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="135" y="132" font-family="Times New Roman, serif" font-size="16">Admit</text>
+
+  <line x1="225" y1="69" x2="290" y2="190" stroke="#111111" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow)"/>
+  <text x="260" y="132" font-family="Times New Roman, serif" font-size="16">Admit</text>
+
+  <line x1="155" y1="215" x2="255" y2="215" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205" y="197" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Activate</text>
+
+  <line x1="255" y1="232" x2="155" y2="232" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205" y="251" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Suspend</text>
+
+  <line x1="355" y1="215" x2="450" y2="215" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="402" y="197" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Dispatch</text>
+
+  <line x1="450" y1="232" x2="355" y2="232" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="402" y="251" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Time-out</text>
+
+  <line x1="550" y1="215" x2="630" y2="215" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="590" y="197" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Release</text>
+
+  <line x1="480" y1="237" x2="323" y2="363" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="404" y="310" font-family="Times New Roman, serif" font-size="16">Event wait</text>
+
+  <line x1="305" y1="361" x2="305" y2="239" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="260" y="301" font-family="Times New Roman, serif" font-size="16">Event</text>
+  <text x="260" y="318" font-family="Times New Roman, serif" font-size="16">occurs</text>
+
+  <line x1="105" y1="361" x2="105" y2="239" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="60" y="301" font-family="Times New Roman, serif" font-size="16">Event</text>
+  <text x="60" y="318" font-family="Times New Roman, serif" font-size="16">occurs</text>
+
+  <line x1="155" y1="385" x2="255" y2="385" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205" y="367" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Activate</text>
+
+  <line x1="255" y1="402" x2="155" y2="402" stroke="#111111" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205" y="421" text-anchor="middle" font-family="Times New Roman, serif" font-size="16">Suspend</text>
+
+  <path d="M 465 193 C 380 135, 210 130, 123 191" fill="none" stroke="#111111" stroke-width="2" stroke-dasharray="8 5" marker-end="url(#arrow)"/>
+  <text x="360" y="146" font-family="Times New Roman, serif" font-size="16">Suspend</text>
+</svg>
