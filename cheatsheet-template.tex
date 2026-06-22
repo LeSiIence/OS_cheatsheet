@@ -1,0 +1,113 @@
+\documentclass[UTF8,10pt,landscape]{ctexart}
+
+% Build with: xelatex cheatsheet-template.tex
+% Or:         lualatex cheatsheet-template.tex
+
+\usepackage[
+  a4paper,
+  landscape,
+  left=6mm,
+  right=6mm,
+  top=6mm,
+  bottom=6mm
+]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,tabularx,array}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{accent}{HTML}{0F766E}
+\definecolor{accentlight}{HTML}{E6FFFA}
+\definecolor{ink}{HTML}{111827}
+\definecolor{muted}{HTML}{6B7280}
+\definecolor{rulegray}{HTML}{D1D5DB}
+\definecolor{codebg}{HTML}{F8FAFC}
+
+\newcommand{\cheatbodyfont}{\fontsize{7.2pt}{7.7pt}\selectfont}
+\newcommand{\cheatsectionfont}{\fontsize{8.2pt}{8.6pt}\selectfont}
+\newcommand{\cheatsubsectionfont}{\fontsize{7.4pt}{7.8pt}\selectfont}
+\newcommand{\cheattinyfont}{\fontsize{6.4pt}{6.8pt}\selectfont}
+
+\pagestyle{empty}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4pt}
+\setlength{\columnsep}{3.2mm}
+\setlength{\columnseprule}{0.15pt}
+\setlength{\premulticols}{0pt}
+\setlength{\postmulticols}{0pt}
+\setlength{\multicolsep}{0pt}
+\setlength{\tabcolsep}{2pt}
+\setlength{\fboxsep}{1pt}
+\renewcommand{\arraystretch}{0.82}
+
+\makeatletter
+\def\@listi{\leftmargin\leftmargini
+  \topsep 0.4pt
+  \parsep 0pt
+  \partopsep 0pt
+  \itemsep 0pt}
+\let\@listI\@listi
+\@listi
+\makeatother
+
+\newcommand{\cheatsection}[1]{%
+  \vspace{3pt}%
+  {\color{accent}\normalfont\bfseries\cheatsectionfont #1\par}%
+  \vspace{-2.5pt}%
+  {\color{accent}\rule{\linewidth}{0.3pt}\par}%
+  \vspace{1pt}%
+}
+\newcommand{\cheatsubsection}[1]{%
+  \vspace{1.6pt}%
+  {\color{ink}\normalfont\bfseries\cheatsubsectionfont #1\par}%
+  \vspace{0.2pt}%
+}
+
+\newcommand{\term}[1]{\textbf{\color{accent}#1}}
+\newcommand{\key}[1]{\fcolorbox{rulegray}{accentlight}{\cheattinyfont\texttt{#1}}}
+\newcommand{\code}[1]{\texttt{\cheatbodyfont #1}}
+\newcommand{\note}[1]{%
+  \begingroup
+  \setlength{\fboxsep}{2pt}%
+  \colorbox{accentlight}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep\relax}{\cheattinyfont #1}%
+  }%
+  \endgroup
+}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstdefinestyle{cheatcode}{
+  basicstyle=\ttfamily\cheattinyfont,
+  backgroundcolor=\color{codebg},
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{rulegray},
+  framerule=0.2pt,
+  xleftmargin=1pt,
+  xrightmargin=1pt,
+  aboveskip=1pt,
+  belowskip=1pt
+}
+\lstset{style=cheatcode}
+
+\begin{document}
+\cheatbodyfont
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+\begin{multicols*}{5}
+111
+
+
+
+\end{multicols*}
+
+\end{document}
