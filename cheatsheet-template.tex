@@ -287,7 +287,7 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 \bottomrule
 \end{tabularx}
 
-\cheatsection{Fast Recall}
+\cheatsection{Chapter 2 Fast Recall}
 \begin{itemize}
   \item OS = application controller + hardware interface + resource manager.
   \item OS hides hardware details behind services and interfaces.
@@ -295,6 +295,117 @@ The OS is also software. It gains control, schedules and allocates resources, gi
   \item Kernel holds common privileged OS functions in memory.
   \item System calls are the legal bridge from user mode to kernel mode.
   \item Evolution needs modular design, clear interfaces, and maintainability.
+\end{itemize}
+
+\cheatsection{3 Process Description and Control}
+\cheatsubsection{Process, Image, PCB}
+\term{Process}: a program in execution; an entity that can be assigned to and executed by a processor.\\
+\term{Process image}: program code, data, stack, and process attributes.\\
+\term{PCB}: OS record holding enough information to stop and later resume a process as if it had not been interrupted.
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{ID} & PID, parent PID, user ID.\\
+\term{CPU state} & registers, PC, PSW, stack pointer.\\
+\term{Control} & state, priority, scheduling links, memory pointers, I/O status, accounting.\\
+\bottomrule
+\end{tabularx}
+\term{Instruction trace}: sequence of instructions actually executed by a process.\\
+\term{OS tables}: memory, I/O, file, and process tables.
+
+\cheatsubsection{Five-State Model}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{New} & created but not yet admitted.\\
+\term{Ready} & can run once assigned a CPU; lacks only CPU.\\
+\term{Running} & currently executing on the CPU.\\
+\term{Blocked} & waits for an event such as I/O completion.\\
+\term{Exit} & terminated or released.\\
+\bottomrule
+\end{tabularx}
+\term{Admit}: New \(\to\) Ready. \term{Dispatch}: Ready \(\to\) Running. \term{Timeout/preempt}: Running \(\to\) Ready. \term{Event wait}: Running \(\to\) Blocked. \term{Event occurs}: Blocked \(\to\) Ready. \term{Release}: Running \(\to\) Exit.\\
+\note{Ready = waiting for CPU; Blocked = waiting for an event. An event-completed blocked process returns to Ready, not directly to Running.}
+
+\cheatsubsection{Suspension and Swapping}
+\term{Swapping}: moving a process between main memory and disk to free memory and improve CPU use.\\
+\term{Suspended}: not immediately available for execution; may or may not be waiting for an event.
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Ready/Suspend} & swapped out; event condition satisfied; can run after swap-in.\\
+\term{Blocked/Suspend} & swapped out and still waiting for an event.\\
+\term{Reasons} & swapping, OS reason, interactive user request, timing, parent request.\\
+\term{Traits} & not executable now; may wait on event; agent-suspended; needs explicit activation.\\
+\bottomrule
+\end{tabularx}
+\term{Queues}: use one Ready queue plus per-event Blocked queues; suspended states use Ready/Suspend and per-event Blocked/Suspend queues.
+
+\cheatsubsection{Control, Modes, Switching}
+\term{Creation steps}: assign PID; allocate process space; initialize PCB; link into ready or suspend queues; create/expand accounting and other tables.\\
+\term{User mode}: low privilege; cannot execute privileged instructions. \term{Kernel/System mode}: high privilege for protected OS operations.\\
+\term{Interrupt}: asynchronous external event. \term{Trap}: exception caused by the current instruction. \term{Supervisor call}: explicit request for an OS service.\\
+\term{Mode switch}: changes privilege mode, possibly same process. \term{Process switch}: CPU changes from one process to another.\\
+\term{Process switch work}: save old PC, PSW, registers into PCB; update state and queues; choose next process; load next PCB/context.
+
+\cheatsection{Chapter 3 Review Stems}
+{\cheattinyfont
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{R3.1 Trace} & Stem: instruction trace. A: executed instruction sequence of a process.\\
+\term{R3.2 Creation} & Stem: process creation events. A: new batch job, interactive logon, OS-created service, spawned child.\\
+\term{R3.3 States} & Stem: Fig. 3.6 states. A: New, Ready, Running, Blocked, Exit.\\
+\term{R3.4 Preempt} & Stem: preempt a process. A: reclaim CPU before the process voluntarily yields or finishes.\\
+\term{R3.5 Swapping} & Stem: swapping and purpose. A: move process memory to/from disk to free memory and improve CPU use.\\
+\term{R3.6 Two blocked} & Stem: why Fig. 3.9b has two blocked states. A: resident Blocked vs swapped-out Blocked/Suspend.\\
+\term{R3.7 Suspended} & Stem: four suspended-process traits. A: not executable now; may wait; agent-suspended; explicitly activated.\\
+\term{R3.8 OS tables} & Stem: OS management tables. A: memory, I/O, file, process.\\
+\term{R3.9 PCB info} & Stem: three PCB categories. A: identification, processor state, process control.\\
+\term{R3.10 Modes} & Stem: why user/kernel modes. A: protect OS, PCBs, memory, I/O, privileged instructions.\\
+\term{R3.11 Create} & Stem: OS steps to create process. A: PID, space, PCB, links, other tables.\\
+\term{R3.12 Int/trap} & Stem: interrupt vs trap. A: external asynchronous event vs instruction-caused exception.\\
+\term{R3.13 Examples} & Stem: three interrupts. A: clock, I/O, memory fault.\\
+\term{R3.14 Switches} & Stem: mode switch vs process switch. A: privilege change vs changing the running process.\\
+\bottomrule
+\end{tabularx}
+}
+
+\columnbreak
+\cheatsection{Chapter 3 Problem Stems}
+{\cheattinyfont
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{P3.1 Transitions} & R/RUN/B/NR table: 1 dispatch, 2 preempt, 3 event wait, 4 event occurs, 5 ready swap-out, 6 blocked swap-out.\\
+\term{P3.2 Timeline} & At \(t=22\): P1 B(d3 read), P3 B(d2 read), P7 B(d3 write), P5 likely running. At \(t=37\): P1/P3 ready, P5 Blocked/Suspend, P7 blocked, P8 running. At \(t=47\): P5 ready, P7 blocked, P8 exit; scheduler decides which ready process runs.\\
+\term{P3.3 Seven states} & Possible direct moves: N\(\to\)R/RS/E; R\(\to\)Run/RS/E; Run\(\to\)R/B/RS/E; B\(\to\)R/BS/E; RS\(\to\)R/E; BS\(\to\)B/RS/E; all other direct moves are impossible in the standard model.\\
+\term{P3.4 Queues} & Draw Ready queue, processor, per-event Blocked queues, Ready/Suspend queue, and per-event Blocked/Suspend queues.\\
+\bottomrule
+\end{tabularx}
+\vspace{1pt}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{P3.5 Policy} & Balance priority and swap cost: swap in a Ready/Suspend process only when priority or aging benefit exceeds a threshold.\\
+\term{P3.6 VAX states} & Many wait states give precise event/resource queues; memory-management or global resource waits need no resident/outswapped pair.\\
+\term{P3.7 Access modes} & Kernel, Executive, Supervisor, User: finer protection and least privilege, but more complexity and switch overhead.\\
+\term{P3.8 Rings} & Ring protection is nested; inner domains can access outer objects, so it cannot enforce selective need-to-know access well.\\
+\bottomrule
+\end{tabularx}
+\vspace{1pt}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{P3.9 Multi-wait} & A process may wait for several events, e.g., network, keyboard, timeout; use wait descriptors or multiple queue links and remove stale links after wakeup.\\
+\term{P3.10 Fixed saves} & Fixed interrupt save locations work only in simple nonnested systems; nested interrupts, multiprogramming, and process switches need PCB/kernel-stack context.\\
+\term{P3.11 Real-time} & A nonpreemptive kernel gives unbounded latency, priority inversion, and missed deadlines; real-time systems need bounded response.\\
+\term{P3.12 Fork} & Successful \code{fork()} prints two lines: \(0\) in the child and child PID in the parent; order is scheduler-dependent.\\
+\bottomrule
+\end{tabularx}
+}
+
+\cheatsection{Chapter 3 Fast Recall}
+\begin{itemize}
+  \item Process = program in execution; PCB makes pause/resume possible.
+  \item Ready lacks CPU; Blocked lacks an event; Suspended is out of main memory.
+  \item Preemption takes CPU from a process before it yields.
+  \item Interrupts are external; traps are instruction-caused; supervisor calls request OS services.
+  \item A mode switch can stay in the same process; a process switch always changes processes.
+  \item Context switching saves old PCB state and restores the selected process state.
 \end{itemize}
 
 
