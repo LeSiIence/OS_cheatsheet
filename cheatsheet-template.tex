@@ -67,7 +67,13 @@
   \vspace{0.2pt}%
 }
 
-\newcommand{\term}[1]{\textbf{\color{accent}#1}}
+\newcommand{\zhhint}[1]{{\color{muted}\cheattinyfont（#1）}}
+\newcommand{\term}[2][]{%
+  \textbf{\color{accent}#2}%
+  \if\relax\detokenize{#1}\relax
+  \else\zhhint{#1}%
+  \fi
+}
 \newcommand{\key}[1]{\fcolorbox{rulegray}{accentlight}{\cheattinyfont\texttt{#1}}}
 \newcommand{\code}[1]{\texttt{\cheatbodyfont #1}}
 \newcommand{\note}[1]{%
@@ -89,6 +95,8 @@
 \newcommand{\stemrow}[2]{\par\noindent\term{#1}: #2\par}
 
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{T}{>{\raggedright\arraybackslash}p{0.34\linewidth}}
+\newcolumntype{S}{>{\raggedright\arraybackslash}p{0.18\linewidth}}
 
 \lstdefinestyle{cheatcode}{
   basicstyle=\ttfamily\cheattinyfont,
@@ -114,36 +122,52 @@
 \setlength{\belowdisplayshortskip}{0pt}
 
 \begin{multicols*}{5}
+\cheatsection{0 Quick Index / 快速索引}
+\begin{stemlist}
+\term[总览/中断/缓存]{Ch1}: CPU registers, interrupts, memory hierarchy, cache, DMA.\\
+\term[OS目标/接口/模式]{Ch2}: convenience, efficiency, evolution; ISA/ABI/API; system call; user/kernel mode.\\
+\term[进程/状态/切换]{Ch3}: process image, PCB, five/seven-state model, suspend, trap, process switch.\\
+\term[线程模型]{Ch4}: thread vs process, ULT/KLT, jacketing, shared resources.\\
+\term[并发同步]{Ch5}: race condition, critical section, mutex, semaphore, producer/consumer.\\
+\term[死锁处理]{Ch6}: four conditions, prevention, avoidance, detection, banker, safe state.\\
+\term[内存管理]{Ch7}: relocation, partitioning, fragmentation, buddy, paging, address translation.\\
+\term[虚拟内存]{Ch8}: page fault, resident set, TLB, OPT/LRU/FIFO/Clock, working set, thrashing.\\
+\term[单处理器调度]{Ch9}: long/medium/short scheduler, FCFS, RR, SPN/SJF, SRT, HRRN, feedback.\\
+\term[多核/实时]{Ch10}: load sharing, gang scheduling, dedicated/dynamic scheduling, hard/soft real-time.\\
+\term[文件管理]{Ch12}: file organization, directory, B-tree, blocking, contiguous/chained/indexed allocation.
+\end{stemlist}
+\note{考试查找路线：先按章定位，再扫绿色关键词后的中文括注；计算题优先看 Ch7 地址转换、Ch8 置换/TLB、Ch9 调度甘特图、Ch12 B-tree/分配。}
+
 \cheatsection{1 Computer System Overview}
 \cheatsubsection{Main Elements and Registers}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Processor} & executes instructions and controls system operation.\\
-\term{Main memory} & stores currently used programs and data.\\
-\term{I/O modules} & move data between the computer and external devices.\\
-\term{System bus} & carries data, address, and control signals among modules.\\
+\term[处理器/CPU]{Processor} & executes instructions and controls system operation.\\
+\term[主存/当前程序数据]{Main memory} & stores currently used programs and data.\\
+\term[输入输出模块]{I/O modules} & move data between the computer and external devices.\\
+\term[数据/地址/控制线]{System bus} & carries data, address, and control signals among modules.\\
 \bottomrule
 \end{tabularx}
-\term{User-visible registers}: referenced by machine instructions to reduce memory access.\\
-\term{Control/status registers}: PC, IR, MAR, MBR, PSW; used by CPU and OS to control execution.
+\term[用户可见寄存器]{User-visible registers}: referenced by machine instructions to reduce memory access.\\
+\term[控制/状态寄存器]{Control/status registers}: PC, IR, MAR, MBR, PSW; used by CPU and OS to control execution.
 
 \cheatsubsection{Instruction Actions}
 \begin{itemize}
-  \item \term{Processor-memory}: load/store between CPU and memory.
-  \item \term{Processor-I/O}: transfer data between CPU and I/O modules.
-  \item \term{Data processing}: arithmetic or logical operations.
-  \item \term{Control}: branch, jump, call, return; changes execution order.
+  \item \term[访存指令]{Processor-memory}: load/store between CPU and memory.
+  \item \term[I/O传送]{Processor-I/O}: transfer data between CPU and I/O modules.
+  \item \term[算术/逻辑]{Data processing}: arithmetic or logical operations.
+  \item \term[改变执行流]{Control}: branch, jump, call, return; changes execution order.
 \end{itemize}
 
 \cheatsection{Interrupts}
 \cheatsubsection{Purpose and Types}
-\term{Interrupt}: a mechanism by which I/O, timer, program error, or hardware failure interrupts normal processor execution. Main purpose: improve processor utilization.
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\term[中断/提高CPU利用率]{Interrupt}: a mechanism by which I/O, timer, program error, or hardware failure interrupts normal processor execution. Main purpose: improve processor utilization.
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Program} & divide by zero, overflow, illegal instruction.\\
-\term{Timer} & lets the OS regain control periodically.\\
-\term{I/O} & device reports completion or readiness.\\
-\term{Hardware failure} & power failure, memory parity error.\\
+\term[程序异常]{Program} & divide by zero, overflow, illegal instruction.\\
+\term[时钟中断]{Timer} & lets the OS regain control periodically.\\
+\term[设备完成/就绪]{I/O} & device reports completion or readiness.\\
+\term[硬件故障]{Hardware failure} & power failure, memory parity error.\\
 \bottomrule
 \end{tabularx}
 
@@ -157,12 +181,12 @@
 \note{PC tells where to resume; PSW records processor state. Polling repeatedly tests device flags; interrupts let the device notify the CPU.}
 
 \cheatsubsection{Multiple Interrupts}
-\term{Sequential}: disable interrupts during ISR; new interrupts stay pending. Simple but may delay urgent events.\\
-\term{Nested}: assign priorities; a higher-priority interrupt may interrupt a lower-priority ISR.
+\term[顺序处理]{Sequential}: disable interrupts during ISR; new interrupts stay pending. Simple but may delay urgent events.\\
+\term[嵌套/优先级]{Nested}: assign priorities; a higher-priority interrupt may interrupt a lower-priority ISR.
 
 \cheatsection{Memory, Cache, I/O}
 \cheatsubsection{Memory Hierarchy}
-Higher levels are \term{faster}, \term{smaller}, and \term{more expensive per bit}; lower levels are larger and slower. Distinguish levels by capacity, access time, cost per bit, and frequency of access.
+Higher levels are \term[更快]{faster}, \term[更小]{smaller}, and \term[每位更贵]{more expensive per bit}; lower levels are larger and slower. Distinguish levels by capacity, access time, cost per bit, and frequency of access.
 \[
 T_{\mathrm{avg}}=\sum_i\left(\prod_{j<i}(1-H_j)\right)T_i
 \]
@@ -171,14 +195,14 @@ C_{\mathrm{avg}}=\sum C_iS_i/\sum S_i
 \]
 
 \cheatsubsection{Cache and Locality}
-\term{Cache}: small fast memory between processor and main memory; stores recently or frequently used blocks to reduce average access time.\\
-\term{Temporal locality}: a referenced item is likely to be referenced again soon; keep recent items in fast memory.\\
-\term{Spatial locality}: nearby addresses are likely to be referenced soon; fetch a block, not only one word.
+\term[高速缓存]{Cache}: small fast memory between processor and main memory; stores recently or frequently used blocks to reduce average access time.\\
+\term[时间局部性/最近还会用]{Temporal locality}: a referenced item is likely to be referenced again soon; keep recent items in fast memory.\\
+\term[空间局部性/附近也会用]{Spatial locality}: nearby addresses are likely to be referenced soon; fetch a block, not only one word.
 
 \cheatsubsection{I/O and DMA}
-\term{Programmed I/O}: CPU waits by polling flags such as FGI/FGO.\\
-\term{Interrupt-driven I/O}: IEN enables the device to interrupt when ready.\\
-\term{DMA}: transfers data directly between I/O device and memory; DMA gets high memory priority because device delay may cause data loss, while CPU delay usually only slows execution.
+\term[程序控制I/O/轮询]{Programmed I/O}: CPU waits by polling flags such as FGI/FGO.\\
+\term[中断驱动I/O]{Interrupt-driven I/O}: IEN enables the device to interrupt when ready.\\
+\term[直接存储器访问]{DMA}: transfers data directly between I/O device and memory; DMA gets high memory priority because device delay may cause data loss, while CPU delay usually only slows execution.
 
 \cheatsection{Chapter 1 Exam Questions}
 \cheatsubsection{Review 1.1--1.10}
@@ -215,69 +239,69 @@ C_{\mathrm{avg}}=\sum C_iS_i/\sum S_i
 
 \cheatsection{2.1 OS Objectives and Functions}
 \cheatsubsection{Definition}
-\term{Operating system}: a program that controls application execution and acts as an interface between applications and computer hardware.
+\term[操作系统]{Operating system}: a program that controls application execution and acts as an interface between applications and computer hardware.
 
 \cheatsubsection{Three Objectives}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Convenience} & makes the computer easier to use.\\
-\term{Efficiency} & uses CPU, memory, I/O, files, storage, and network resources efficiently.\\
-\term{Evolution} & permits new functions, tests, fixes, and hardware support without disrupting service.\\
+\term[方便使用]{Convenience} & makes the computer easier to use.\\
+\term[资源效率]{Efficiency} & uses CPU, memory, I/O, files, storage, and network resources efficiently.\\
+\term[可演化/可维护]{Evolution} & permits new functions, tests, fixes, and hardware support without disrupting service.\\
 \bottomrule
 \end{tabularx}
 
 \cheatsubsection{Two Main Roles}
 \begin{itemize}
-  \item \term{User/computer interface}: hides hardware details and provides usable services.
-  \item \term{Resource manager}: allocates processor, memory, I/O devices, files, storage, and network resources.
+  \item \term[用户接口]{User/computer interface}: hides hardware details and provides usable services.
+  \item \term[资源管理器]{Resource manager}: allocates processor, memory, I/O devices, files, storage, and network resources.
 \end{itemize}
 
 \cheatsubsection{OS Services}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Program development} & editors, debuggers, compilers, libraries.\\
-\term{Program execution} & loads code/data, initializes files, I/O, and resources.\\
-\term{I/O access} & uniform device interface, e.g. \code{read()}, \code{write()}.\\
-\term{File access} & file organization, permissions, protection.\\
-\term{System access} & login, authorization, resource contention control.\\
-\term{Error handling} & detect hardware/software errors; terminate, retry, or report.\\
-\term{Accounting} & collect usage/performance data; support billing and tuning.\\
+\term[程序开发服务]{Program development} & editors, debuggers, compilers, libraries.\\
+\term[程序执行服务]{Program execution} & loads code/data, initializes files, I/O, and resources.\\
+\term[I/O统一访问]{I/O access} & uniform device interface, e.g. \code{read()}, \code{write()}.\\
+\term[文件访问]{File access} & file organization, permissions, protection.\\
+\term[系统访问/权限]{System access} & login, authorization, resource contention control.\\
+\term[错误处理]{Error handling} & detect hardware/software errors; terminate, retry, or report.\\
+\term[记账/性能统计]{Accounting} & collect usage/performance data; support billing and tuning.\\
 \bottomrule
 \end{tabularx}
 
 \cheatsubsection{Interfaces: ISA vs ABI vs API}
-\begin{tabularx}{\linewidth}{@{}lYY@{}}
+\begin{tabularx}{\linewidth}{@{}SYY@{}}
 \toprule
-\term{ISA} & CPU instruction set & hardware/software boundary; user ISA vs system ISA.\\
-\term{ABI} & binary compatibility & system-call interface, registers, calling convention, binary format.\\
-\term{API} & source-level calls & library functions used by programmers, e.g. \code{open()}, \code{malloc()}.\\
+\term[指令集接口]{ISA} & CPU instruction set & hardware/software boundary; user ISA vs system ISA.\\
+\term[二进制接口]{ABI} & binary compatibility & system-call interface, registers, calling convention, binary format.\\
+\term[源代码接口]{API} & source-level calls & library functions used by programmers, e.g. \code{open()}, \code{malloc()}.\\
 \bottomrule
 \end{tabularx}
 \note{Memory hook: API = coding; ABI = compiled binary execution; ISA = CPU instructions.}
 
 \cheatsection{Kernel, Control, Evolution}
 \cheatsubsection{Kernel / Nucleus}
-\term{Kernel}: central OS part, normally resident in main memory, containing the most frequently used OS functions: process, memory, I/O, file, interrupt, and system-call handling.
+\term[内核/常驻核心]{Kernel}: central OS part, normally resident in main memory, containing the most frequently used OS functions: process, memory, I/O, file, interrupt, and system-call handling.
 
 \cheatsubsection{How the OS Controls the CPU}
 The OS is also software. It gains control, schedules and allocates resources, gives control to user programs, then regains control through interrupts, system calls, or exceptions.
 
 \cheatsubsection{Why OSs Must Evolve}
 \begin{itemize}
-  \item \term{Hardware upgrades}: new processors/devices require new support.
-  \item \term{New services}: users and administrators need new tools and features.
-  \item \term{Fixes}: bugs must be repaired without destabilizing old services.
+  \item \term[硬件升级]{Hardware upgrades}: new processors/devices require new support.
+  \item \term[新增服务]{New services}: users and administrators need new tools and features.
+  \item \term[修复错误]{Fixes}: bugs must be repaired without destabilizing old services.
 \end{itemize}
 
 \cheatsection{System Calls and Modes}
 \cheatsubsection{System Calls}
-\term{System call}: controlled entry point for a user program to request OS services such as file I/O, process creation, memory allocation, communication, and protection.
+\term[系统调用/进内核]{System call}: controlled entry point for a user program to request OS services such as file I/O, process creation, memory allocation, communication, and protection.
 
 \cheatsubsection{Dual-Mode Operation}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{User mode} & low privilege; applications cannot directly execute privileged instructions.\\
-\term{Kernel mode} & high privilege; OS kernel performs protected operations.\\
+\term[用户态/低权限]{User mode} & low privilege; applications cannot directly execute privileged instructions.\\
+\term[内核态/高权限]{Kernel mode} & high privilege; OS kernel performs protected operations.\\
 \bottomrule
 \end{tabularx}
 \note{Flow: a user program requests a system call/trap; the kernel performs the service and returns to user mode.}
@@ -303,53 +327,53 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{3 Process Description and Control}
 \cheatsubsection{Process, Image, PCB}
-\term{Process}: a program in execution; an entity that can be assigned to and executed by a processor.\\
-\term{Process image}: program code, data, stack, and process attributes.\\
-\term{PCB}: OS record holding enough information to stop and later resume a process as if it had not been interrupted.
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\term[进程/执行中的程序]{Process}: a program in execution; an entity that can be assigned to and executed by a processor.\\
+\term[进程映像]{Process image}: program code, data, stack, and process attributes.\\
+\term[进程控制块]{PCB}: OS record holding enough information to stop and later resume a process as if it had not been interrupted.
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{ID} & PID, parent PID, user ID.\\
-\term{CPU state} & registers, PC, PSW, stack pointer.\\
-\term{Control} & state, priority, scheduling links, memory pointers, I/O status, accounting.\\
+\term[标识信息]{ID} & PID, parent PID, user ID.\\
+\term[处理器状态]{CPU state} & registers, PC, PSW, stack pointer.\\
+\term[控制信息]{Control} & state, priority, scheduling links, memory pointers, I/O status, accounting.\\
 \bottomrule
 \end{tabularx}
-\term{Instruction trace}: sequence of instructions actually executed by a process.\\
-\term{OS tables}: memory, I/O, file, and process tables.
+\term[指令轨迹]{Instruction trace}: sequence of instructions actually executed by a process.\\
+\term[OS管理表]{OS tables}: memory, I/O, file, and process tables.
 
 \cheatsubsection{Five-State Model}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{New} & created but not yet admitted.\\
-\term{Ready} & can run once assigned a CPU; lacks only CPU.\\
-\term{Running} & currently executing on the CPU.\\
-\term{Blocked} & waits for an event such as I/O completion.\\
-\term{Exit} & terminated or released.\\
+\term[新建]{New} & created but not yet admitted.\\
+\term[就绪/只差CPU]{Ready} & can run once assigned a CPU; lacks only CPU.\\
+\term[运行]{Running} & currently executing on the CPU.\\
+\term[阻塞/等事件]{Blocked} & waits for an event such as I/O completion.\\
+\term[退出]{Exit} & terminated or released.\\
 \bottomrule
 \end{tabularx}
-\term{Admit}: New \(\to\) Ready. \term{Dispatch}: Ready \(\to\) Running. \term{Timeout/preempt}: Running \(\to\) Ready. \term{Event wait}: Running \(\to\) Blocked. \term{Event occurs}: Blocked \(\to\) Ready. \term{Release}: Running \(\to\) Exit.\\
+\term[接纳]{Admit}: New \(\to\) Ready. \term[派遣]{Dispatch}: Ready \(\to\) Running. \term[超时/抢占]{Timeout/preempt}: Running \(\to\) Ready. \term[等待事件]{Event wait}: Running \(\to\) Blocked. \term[事件发生]{Event occurs}: Blocked \(\to\) Ready. \term[释放]{Release}: Running \(\to\) Exit.\\
 \note{Ready = waiting for CPU; Blocked = waiting for an event. An event-completed blocked process returns to Ready, not directly to Running.}
 
 \cheatsubsection{Suspension and Swapping}
-\term{Swapping}: moving a process between main memory and disk to free memory and improve CPU use.\\
-\term{Suspended}: not immediately available for execution; may or may not be waiting for an event.
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\term[交换/内存磁盘搬移]{Swapping}: moving a process between main memory and disk to free memory and improve CPU use.\\
+\term[挂起/不可立即执行]{Suspended}: not immediately available for execution; may or may not be waiting for an event.
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Ready/Suspend} & swapped out; event condition satisfied; can run after swap-in.\\
-\term{Blocked/Suspend} & swapped out and still waiting for an event.\\
-\term{Reasons} & swapping, OS reason, interactive user request, timing, parent request.\\
-\term{Traits} & not executable now; may wait on event; agent-suspended; needs explicit activation.\\
+\term[就绪挂起]{Ready/Suspend} & swapped out; event condition satisfied; can run after swap-in.\\
+\term[阻塞挂起]{Blocked/Suspend} & swapped out and still waiting for an event.\\
+\term[挂起原因]{Reasons} & swapping, OS reason, interactive user request, timing, parent request.\\
+\term[挂起特征]{Traits} & not executable now; may wait on event; agent-suspended; needs explicit activation.\\
 \bottomrule
 \end{tabularx}
-\term{Queues}: use one Ready queue plus per-event Blocked queues; suspended states use Ready/Suspend and per-event Blocked/Suspend queues.\par
+\term[队列组织]{Queues}: use one Ready queue plus per-event Blocked queues; suspended states use Ready/Suspend and per-event Blocked/Suspend queues.\par
 \cheatsubsection{Seven-State Diagram}
 \noindent\includegraphics[width=\linewidth]{chapter3-seven-state.png}
 
 \cheatsubsection{Control, Modes, Switching}
-\term{Creation steps}: assign PID; allocate process space; initialize PCB; link into ready or suspend queues; create/expand accounting and other tables.\\
-\term{User mode}: low privilege; cannot execute privileged instructions. \term{Kernel/System mode}: high privilege for protected OS operations.\\
-\term{Interrupt}: asynchronous external event. \term{Trap}: exception caused by the current instruction. \term{Supervisor call}: explicit request for an OS service.\\
-\term{Mode switch}: changes privilege mode, possibly same process. \term{Process switch}: CPU changes from one process to another.\\
-\term{Process switch work}: save old PC, PSW, registers into PCB; update state and queues; choose next process; load next PCB/context.
+\term[创建进程步骤]{Creation steps}: assign PID; allocate process space; initialize PCB; link into ready or suspend queues; create/expand accounting and other tables.\\
+\term[用户态]{User mode}: low privilege; cannot execute privileged instructions. \term[内核/系统态]{Kernel/System mode}: high privilege for protected OS operations.\\
+\term[外部异步]{Interrupt}: asynchronous external event. \term[当前指令异常]{Trap}: exception caused by the current instruction. \term[访管调用]{Supervisor call}: explicit request for an OS service.\\
+\term[模式切换]{Mode switch}: changes privilege mode, possibly same process. \term[进程切换]{Process switch}: CPU changes from one process to another.\\
+\term[上下文切换工作]{Process switch work}: save old PC, PSW, registers into PCB; update state and queues; choose next process; load next PCB/context.
 
 \cheatsection{Chapter 3 Review Q\&A}
 \begin{stemlist}
@@ -399,21 +423,21 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{4 Threads}
 \cheatsubsection{Process vs Thread}
-\term{Process}: unit of resource ownership and protection; owns address space, process image, open files, I/O resources, privileges, and IPC links.\\
-\term{Thread}: unit of scheduling/execution; has state, PC, registers, stack, priority, context, and thread-local data. Threads in one process share memory and resources.\\
-\term{Multithreading}: multiple concurrent execution paths inside one process. \term{PCB} stores process resources; \term{TCB} stores thread execution context.\\
-\term{Advantages}: faster create/terminate/switch, cheaper communication, better responsiveness, overlapped I/O and computation, true parallelism on multiprocessors.
+\term[资源拥有单位]{Process}: unit of resource ownership and protection; owns address space, process image, open files, I/O resources, privileges, and IPC links.\\
+\term[调度执行单位]{Thread}: unit of scheduling/execution; has state, PC, registers, stack, priority, context, and thread-local data. Threads in one process share memory and resources.\\
+\term[多线程]{Multithreading}: multiple concurrent execution paths inside one process. \term[进程资源]{PCB} stores process resources; \term[线程上下文]{TCB} stores thread execution context.\\
+\term[线程优点]{Advantages}: faster create/terminate/switch, cheaper communication, better responsiveness, overlapped I/O and computation, true parallelism on multiprocessors.
 
 \cheatsubsection{States, Operations, Synchronization}
-\term{Thread states}: Running, Ready, Blocked. Suspend states are usually process-level because all threads share the process address space.\\
-\term{Operations}: spawn creates a ready thread; block waits for an event; unblock moves to Ready; finish releases context and stack.\\
-\term{Synchronization}: required because shared address space/resources can cause data races, lost updates, and corrupted data structures.
+\term[线程状态]{Thread states}: Running, Ready, Blocked. Suspend states are usually process-level because all threads share the process address space.\\
+\term[线程操作]{Operations}: spawn creates a ready thread; block waits for an event; unblock moves to Ready; finish releases context and stack.\\
+\term[同步/防共享冲突]{Synchronization}: required because shared address space/resources can cause data races, lost updates, and corrupted data structures.
 
 \cheatsubsection{ULT, KLT, Combined}
-\term{ULT}: managed by a user-level thread library; kernel sees only the process. Pros: no kernel-mode switch, application scheduling, portable. Cons: blocking syscall may block all process threads; pure ULT cannot exploit multiprocessing.\\
-\term{KLT}: managed and scheduled by the kernel. Pros: one blocked thread need not block the process; threads can run on multiple CPUs; kernel code can be multithreaded. Cons: higher switch overhead.\\
-\term{Jacketing}: wrap a blocking system call so the thread library can test/yield and avoid blocking the whole process.\\
-\term{Combined}: map many ULTs onto some KLTs/LWPs to mix fast user-level management with kernel parallelism.
+\term[用户级线程]{ULT}: managed by a user-level thread library; kernel sees only the process. Pros: no kernel-mode switch, application scheduling, portable. Cons: blocking syscall may block all process threads; pure ULT cannot exploit multiprocessing.\\
+\term[内核级线程]{KLT}: managed and scheduled by the kernel. Pros: one blocked thread need not block the process; threads can run on multiple CPUs; kernel code can be multithreaded. Cons: higher switch overhead.\\
+\term[封套/包裹阻塞调用]{Jacketing}: wrap a blocking system call so the thread library can test/yield and avoid blocking the whole process.\\
+\term[混合模型]{Combined}: map many ULTs onto some KLTs/LWPs to mix fast user-level management with kernel parallelism.
 
 \cheatsection{Chapter 4 Review Q\&A}
 \begin{stemlist}
@@ -454,20 +478,20 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{5 Concurrency and Semaphores}
 \cheatsubsection{Concurrency Basics}
-\term{Concurrency}: multiple processes or threads make progress in the same time interval. On one CPU execution is interleaved; on many CPUs it may overlap in parallel.\\
-\term{Main hazards}: shared global resources, hard resource allocation, and nondeterministic bugs(program hard to reproduce).\\
-\term{Race condition}: final result depends on timing of unsynchronized shared read/write.\\
-\term{Critical section}: code that accesses a shared resource. \term{Mutual exclusion}: at most one process may execute the corresponding critical section for the same resource.
+\term[并发/同一时间段推进]{Concurrency}: multiple processes or threads make progress in the same time interval. On one CPU execution is interleaved; on many CPUs it may overlap in parallel.\\
+\term[并发风险]{Main hazards}: shared global resources, hard resource allocation, and nondeterministic bugs(program hard to reproduce).\\
+\term[竞态/结果看时序]{Race condition}: final result depends on timing of unsynchronized shared read/write.\\
+\term[临界区/访问共享资源]{Critical section}: code that accesses a shared resource. \term[互斥/一次一个]{Mutual exclusion}: at most one process may execute the corresponding critical section for the same resource.
 
 \cheatsubsection{Interaction and OS Concerns}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Unaware} & competition; issues: mutual exclusion, deadlock, starvation.\\
-\term{Indirectly aware} & cooperation by sharing; add data coherence risk.\\
-\term{Directly aware} & cooperation by communication; no shared-data mutex, but deadlock/starvation still possible.\\
+\term[互不知道/竞争]{Unaware} & competition; issues: mutual exclusion, deadlock, starvation.\\
+\term[间接知道/共享数据]{Indirectly aware} & cooperation by sharing; add data coherence risk.\\
+\term[直接知道/通信]{Directly aware} & cooperation by communication; no shared-data mutex, but deadlock/starvation still possible.\\
 \bottomrule
 \end{tabularx}
-\term{OS duties}: track processes, allocate/deallocate resources, protect data/resources, and ensure speed independence.
+\term[OS并发职责]{OS duties}: track processes, allocate/deallocate resources, protect data/resources, and ensure speed independence.
 
 \cheatsubsection{Mutual Exclusion Requirements}
 \begin{itemize}
@@ -480,16 +504,16 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 \end{itemize}
 
 \cheatsubsection{Semaphores}
-\term{Semaphore}: integer synchronization variable accessed only by atomic operations: initialize, \code{semWait}/P/down, \code{semSignal}/V/up.\\
-\term{Count meaning}: \(s>0\) means available units; \(s=0\) means none free; \(s<0\) means \(|s|\) blocked waiters.\\
-\term{Binary semaphore}: value 0/1, often mutex-like. \term{General/counting semaphore}: integer count for multiple resources or ordering.\\
-\term{Mutex vs binary semaphore}: a mutex is unlocked by its locker; a binary semaphore may be waited by one process and signaled by another.\\
-\term{Strong semaphore}: FIFO wait queue. \term{Weak semaphore}: no specified release order; starvation is possible.\\
-\term{Implementation}: \code{semWait} and \code{semSignal} must be atomic; use hardware support, compare-and-swap, short interrupt disable on uniprocessors, or software algorithms.
+\term[信号量/原子P V]{Semaphore}: integer synchronization variable accessed only by atomic operations: initialize, \code{semWait}/P/down, \code{semSignal}/V/up.\\
+\term[计数含义]{Count meaning}: \(s>0\) means available units; \(s=0\) means none free; \(s<0\) means \(|s|\) blocked waiters.\\
+\term[二元信号量]{Binary semaphore}: value 0/1, often mutex-like. \term[计数信号量]{General/counting semaphore}: integer count for multiple resources or ordering.\\
+\term[互斥锁vs二元信号量]{Mutex vs binary semaphore}: a mutex is unlocked by its locker; a binary semaphore may be waited by one process and signaled by another.\\
+\term[强信号量/FIFO]{Strong semaphore}: FIFO wait queue. \term[弱信号量/可能饥饿]{Weak semaphore}: no specified release order; starvation is possible.\\
+\term[实现要点/原子性]{Implementation}: \code{semWait} and \code{semSignal} must be atomic; use hardware support, compare-and-swap, short interrupt disable on uniprocessors, or software algorithms.
 
 \cheatsubsection{Producer/Consumer Patterns}
-\term{Infinite buffer}: \code{n=0} counts items; \code{s=1} protects the buffer. Producer: wait \(s\), append, signal \(s\), signal \(n\). Consumer: wait \(n\), wait \(s\), take, signal \(s\).\\
-\term{Bounded buffer}: \code{e=sizeofbuffer}, \code{n=0}, \code{s=1}. Producer: wait \(e\), wait \(s\), append, signal \(s\), signal \(n\). Consumer: wait \(n\), wait \(s\), take, signal \(s\), signal \(e\).\\
+\term[无限缓冲/只数产品]{Infinite buffer}: \code{n=0} counts items; \code{s=1} protects the buffer. Producer: wait \(s\), append, signal \(s\), signal \(n\). Consumer: wait \(n\), wait \(s\), take, signal \(s\).\\
+\term[有界缓冲/空位+产品]{Bounded buffer}: \code{e=sizeofbuffer}, \code{n=0}, \code{s=1}. Producer: wait \(e\), wait \(s\), append, signal \(s\), signal \(n\). Consumer: wait \(n\), wait \(s\), take, signal \(s\), signal \(e\).\\
 \note{Never wait on the resource count while holding the buffer mutex: producer wait \(s\) then \(e\), or consumer wait \(s\) then \(n\), can deadlock.}
 
 \cheatsection{Chapter 5 Review Q\&A}
@@ -534,39 +558,39 @@ The OS is also software. It gains control, schedules and allocates resources, gi
 
 \cheatsection{6 Deadlock and Starvation}
 \cheatsubsection{Resources and Deadlock Conditions}
-\term{Reusable resource}: not depleted by use; released and used again, e.g., CPU, memory, files, devices, semaphores.\\
-\term{Consumable resource}: produced and consumed; after use it is gone, e.g., messages, signals, interrupts, buffer information.\\
-\term{Deadlock}: processes are permanently blocked because each waits for an event/resource held by another process. \term{Starvation}: a ready/requesting process waits indefinitely because others keep being favored.
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\term[可重用资源]{Reusable resource}: not depleted by use; released and used again, e.g., CPU, memory, files, devices, semaphores.\\
+\term[可消耗资源]{Consumable resource}: produced and consumed; after use it is gone, e.g., messages, signals, interrupts, buffer information.\\
+\term[死锁/互等永久阻塞]{Deadlock}: processes are permanently blocked because each waits for an event/resource held by another process. \term[饥饿/一直不被选]{Starvation}: a ready/requesting process waits indefinitely because others keep being favored.
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Mutual exclusion} & resource can be held by only one process.\\
-\term{Hold and wait} & process holds resources while requesting more.\\
-\term{No preemption} & resource cannot be forcibly taken away.\\
-\term{Circular wait} & closed chain: each process waits for a resource held by the next.\\
+\term[互斥条件]{Mutual exclusion} & resource can be held by only one process.\\
+\term[占有并等待]{Hold and wait} & process holds resources while requesting more.\\
+\term[不可抢占]{No preemption} & resource cannot be forcibly taken away.\\
+\term[循环等待]{Circular wait} & closed chain: each process waits for a resource held by the next.\\
 \bottomrule
 \end{tabularx}
 \note{First three conditions make deadlock possible; adding circular wait creates deadlock.}
 
 \cheatsubsection{Handling Strategies}
-\term{Prevention}: make at least one deadlock condition impossible. Examples: request all resources at once, allow preemption where safe, or impose a global resource order.\\
-\term{Avoidance}: grant a request only if the resulting state is safe. Needs each process's maximum claim.\\
-\term{Detection}: grant resources more freely, periodically test the current state, then recover by aborting, rollback, or preemption.
+\term[预防/破坏条件]{Prevention}: make at least one deadlock condition impossible. Examples: request all resources at once, allow preemption where safe, or impose a global resource order.\\
+\term[避免/只给安全状态]{Avoidance}: grant a request only if the resulting state is safe. Needs each process's maximum claim.\\
+\term[检测/事后发现恢复]{Detection}: grant resources more freely, periodically test the current state, then recover by aborting, rollback, or preemption.
 
 \cheatsubsection{Banker's Algorithm}
 \[
 \mathrm{Need}=\mathrm{Claim}-\mathrm{Allocation}
 \]
 For request \(R_i\): require \(R_i\le Need_i\) and \(R_i\le Available\); pretend to allocate; grant only if a safe sequence exists.\\
-\term{Safe state}: some process completion order can satisfy all remaining needs. \term{Unsafe state}: no guaranteed safe sequence; deadlock may occur but has not necessarily occurred.
+\term[安全状态/有完成序列]{Safe state}: some process completion order can satisfy all remaining needs. \term[不安全/未必已死锁]{Unsafe state}: no guaranteed safe sequence; deadlock may occur but has not necessarily occurred.
 
 \cheatsubsection{Avoidance vs Detection}
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Avoidance} & before allocation; uses Claim/Max, Allocation, Available; tests \(Need_i\le Available\); failure means unsafe.\\
-\term{Detection} & after allocation; uses Request \(Q\), Allocation, Available; tests \(Q_i\le W\); unmarked at end means deadlocked.\\
+\term[避免算法]{Avoidance} & before allocation; uses Claim/Max, Allocation, Available; tests \(Need_i\le Available\); failure means unsafe.\\
+\term[检测算法]{Detection} & after allocation; uses Request \(Q\), Allocation, Available; tests \(Q_i\le W\); unmarked at end means deadlocked.\\
 \bottomrule
 \end{tabularx}
-\term{Detection sketch}: set \(W=Available\); mark processes with zero allocation; repeatedly find unmarked \(Q_i\le W\), mark it, set \(W=W+A_i\). Remaining unmarked processes are deadlocked.
+\term[检测步骤]{Detection sketch}: set \(W=Available\); mark processes with zero allocation; repeatedly find unmarked \(Q_i\le W\), mark it, set \(W=W+A_i\). Remaining unmarked processes are deadlocked.
 
 \cheatsection{Chapter 6 Review Q\&A}
 \begin{stemlist}
@@ -612,22 +636,22 @@ For request \(R_i\): require \(R_i\le Need_i\) and \(R_i\le Available\); pretend
 
 \cheatsection{7 Memory Management}
 \cheatsubsection{Requirements and Addresses}
-\term{Memory management}: allocates main memory among active processes and supports efficient multiprogramming.\\
-\term{Requirements}: relocation, protection, sharing, logical organization, and physical organization.\\
-\term{Logical address}: program-visible address. \term{Relative address}: logical offset from a known point. \term{Physical address}: real main-memory address.\\
-\term{Dynamic relocation}: hardware maps relative to physical address, commonly \(physical=base+relative\); bounds/limit checks enforce protection.
+\term[内存管理]{Memory management}: allocates main memory among active processes and supports efficient multiprogramming.\\
+\term[五个需求]{Requirements}: relocation, protection, sharing, logical organization, and physical organization.\\
+\term[逻辑地址/程序看到]{Logical address}: program-visible address. \term[相对地址/偏移]{Relative address}: logical offset from a known point. \term[物理地址/真实主存]{Physical address}: real main-memory address.\\
+\term[动态重定位]{Dynamic relocation}: hardware maps relative to physical address, commonly \(physical=base+relative\); bounds/limit checks enforce protection.
 
 \cheatsubsection{Partitioning}
-\term{Fixed partitioning}: system-generation split; simple, but internal fragmentation and fixed process count.\\
-\term{Dynamic partitioning}: exact-size allocation; no internal fragmentation, but external fragmentation and possible compaction.\\
-\term{First-fit}: first large enough hole; fast and usually good. \term{Next-fit}: resumes from last placement; often uses later holes.\\
-\term{Best-fit}: smallest large enough hole; often leaves many tiny holes.\\
-\term{Internal frag.}: waste inside allocation. \term{External frag.}: separated holes.
+\term[固定分区/内碎片]{Fixed partitioning}: system-generation split; simple, but internal fragmentation and fixed process count.\\
+\term[动态分区/外碎片]{Dynamic partitioning}: exact-size allocation; no internal fragmentation, but external fragmentation and possible compaction.\\
+\term[首次适配]{First-fit}: first large enough hole; fast and usually good. \term[下次适配]{Next-fit}: resumes from last placement; often uses later holes.\\
+\term[最佳适配]{Best-fit}: smallest large enough hole; often leaves many tiny holes.\\
+\term[内部碎片]{Internal frag.}: waste inside allocation. \term[外部碎片]{External frag.}: separated holes.
 
 \cheatsubsection{Buddy System and Paging}
-\term{Buddy system}: block sizes are powers of two; split on allocation and coalesce free buddies on release. Buddy address: \(buddy_k(x)=x\oplus2^k\).\\
-\term{Paging}: process logical space is split into fixed-size pages; physical memory is split into same-size frames. Pages need not be contiguous.\\
-\term{Page table}: maps page number to frame number. Logical address \(=(page,offset)\); physical address \(=(frame,offset)\).
+\term[伙伴系统/2的幂]{Buddy system}: block sizes are powers of two; split on allocation and coalesce free buddies on release. Buddy address: \(buddy_k(x)=x\oplus2^k\).\\
+\term[分页/页框等大]{Paging}: process logical space is split into fixed-size pages; physical memory is split into same-size frames. Pages need not be contiguous.\\
+\term[页表/页到框]{Page table}: maps page number to frame number. Logical address \(=(page,offset)\); physical address \(=(frame,offset)\).
 \[
 \begin{aligned}
 page&=\lfloor LA/page\_size\rfloor\\
@@ -681,10 +705,10 @@ PA&=frame\times page\_size+offset
 
 \cheatsection{8 Virtual Memory}
 \cheatsubsection{Core Idea and Locality}
-\term{Virtual memory}: lets a process use a large logical address space while only part of it is in real/main memory; the rest is on secondary storage.\\
-\term{Logical/virtual address}: generated by the CPU. \term{Physical/real address}: actual main-memory location. \term{Address translation}: MMU/OS mapping from virtual to physical.\\
-\term{Resident set}: pages of a process currently in memory. \term{Page fault}: referenced page is not resident, so the OS must fetch it.\\
-\term{Locality}: references cluster in time and space; virtual memory works because the current locality can fit in a modest resident set. \term{Thrashing}: page faults dominate execution.
+\term[虚拟内存/只装一部分]{Virtual memory}: lets a process use a large logical address space while only part of it is in real/main memory; the rest is on secondary storage.\\
+\term[虚拟地址/CPU生成]{Logical/virtual address}: generated by the CPU. \term[实地址/主存位置]{Physical/real address}: actual main-memory location. \term[地址转换]{Address translation}: MMU/OS mapping from virtual to physical.\\
+\term[驻留集/在内存的页]{Resident set}: pages of a process currently in memory. \term[缺页/页不在内存]{Page fault}: referenced page is not resident, so the OS must fetch it.\\
+\term[局部性]{Locality}: references cluster in time and space; virtual memory works because the current locality can fit in a modest resident set. \term[抖动/忙于换页]{Thrashing}: page faults dominate execution.
 
 \cheatsubsection{Paging, TLB, Faults}
 \[
@@ -695,26 +719,26 @@ PA&=f\times s+d
 \end{aligned}
 \]
 Offset \(d\) is copied unchanged; the page table maps page \(p\) to frame \(f\).\\
-\term{PTE fields}: present/valid bit, modify/dirty bit, reference/use bit, frame number, and protection/control bits.\\
-\term{TLB}: small fast cache of recent PTEs. \term{TLB miss} means the PTE is not cached; \term{page fault} means the page is not in memory.\\
-\term{Fault handling}: trap to OS, block process, read page from disk, replace a victim if needed, update PTE/TLB, ready the process, restart the faulting instruction.
+\term[页表项字段]{PTE fields}: present/valid bit, modify/dirty bit, reference/use bit, frame number, and protection/control bits.\\
+\term[快表/缓存PTE]{TLB}: small fast cache of recent PTEs. \term[快表未命中]{TLB miss} means the PTE is not cached; \term[缺页中断]{page fault} means the page is not in memory.\\
+\term[缺页处理流程]{Fault handling}: trap to OS, block process, read page from disk, replace a victim if needed, update PTE/TLB, ready the process, restart the faulting instruction.
 
 \cheatsubsection{Policies}
-\term{Fetch}: demand paging loads only on reference; prepaging also loads predicted nearby/future pages.\\
-\term{Placement}: choose a free frame; with paging, placement is usually simple because any frame works.\\
-\term{Replacement}: choose the page least likely to be used soon.
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\term[取页策略]{Fetch}: demand paging loads only on reference; prepaging also loads predicted nearby/future pages.\\
+\term[放置策略]{Placement}: choose a free frame; with paging, placement is usually simple because any frame works.\\
+\term[置换策略]{Replacement}: choose the page least likely to be used soon.
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{OPT} & evict page used farthest in future; optimal benchmark, not implementable.\\
-\term{LRU} & evict least recently used page; good locality match, costly exact implementation.\\
-\term{FIFO} & evict oldest resident page; simple, can evict hot pages and has Belady anomaly.\\
-\term{Clock} & FIFO plus use bit; use \(=1\) gets a second chance, use \(=0\) is victim.\\
-\term{Enhanced clock} & prefer \((u,m)=(0,0)\), then \((0,1)\), then recently used pages; clean pages are cheaper to evict.\\
+\term[最优/未来最远]{OPT} & evict page used farthest in future; optimal benchmark, not implementable.\\
+\term[最近最少使用]{LRU} & evict least recently used page; good locality match, costly exact implementation.\\
+\term[先进先出]{FIFO} & evict oldest resident page; simple, can evict hot pages and has Belady anomaly.\\
+\term[时钟/二次机会]{Clock} & FIFO plus use bit; use \(=1\) gets a second chance, use \(=0\) is victim.\\
+\term[增强时钟/优先干净页]{Enhanced clock} & prefer \((u,m)=(0,0)\), then \((0,1)\), then recently used pages; clean pages are cheaper to evict.\\
 \bottomrule
 \end{tabularx}
-\term{Resident-set management}: decides how many frames and local/global scope. \term{Working set}: pages referenced in recent window \(\Delta\); keep it resident to avoid thrashing.\\
-\term{Cleaning}: demand cleaning writes dirty pages only on eviction; precleaning writes dirty pages early, possibly in batches.\\
-\term{Page size}: small pages reduce internal fragmentation but enlarge page tables/TLB pressure; large pages reduce table overhead but may waste memory and weaken locality.
+\term[驻留集管理/给几帧]{Resident-set management}: decides how many frames and local/global scope. \term[工作集/近期访问页]{Working set}: pages referenced in recent window \(\Delta\); keep it resident to avoid thrashing.\\
+\term[清除策略/写脏页]{Cleaning}: demand cleaning writes dirty pages only on eviction; precleaning writes dirty pages early, possibly in batches.\\
+\term[页大小权衡]{Page size}: small pages reduce internal fragmentation but enlarge page tables/TLB pressure; large pages reduce table overhead but may waste memory and weaken locality.
 
 \cheatsection{Chapter 8 Review Q\&A}
 \begin{stemlist}
@@ -760,44 +784,44 @@ Offset \(d\) is copied unchanged; the page table maps page \(p\) to frame \(f\).
 
 \cheatsection{9 Uniprocessor Scheduling}
 \cheatsubsection{Schedulers and Criteria}
-\term{Long-term scheduler}: admits jobs to the system and controls the degree of multiprogramming.\\
-\term{Medium-term scheduler}: swaps processes in/out of main memory and manages suspended states.\\
-\term{Short-term scheduler / dispatcher}: chooses the next ready process to run; invoked most often.\\
-\term{Criteria}: response time, turnaround time, throughput, processor utilization, fairness, predictability, deadlines.
+\term[长程/准入作业]{Long-term scheduler}: admits jobs to the system and controls the degree of multiprogramming.\\
+\term[中程/交换挂起]{Medium-term scheduler}: swaps processes in/out of main memory and manages suspended states.\\
+\term[短程/派遣CPU]{Short-term scheduler / dispatcher}: chooses the next ready process to run; invoked most often.\\
+\term[调度评价指标]{Criteria}: response time, turnaround time, throughput, processor utilization, fairness, predictability, deadlines.
 \[
 T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 \]
-\term{Priority}: in this text, a smaller priority value usually means higher priority. \term{Aging} raises long-waiting jobs to prevent starvation.
+\term[优先级/数值小级高]{Priority}: in this text, a smaller priority value usually means higher priority. \term[老化/防饥饿]{Aging} raises long-waiting jobs to prevent starvation.
 
 \cheatsubsection{Decision Modes and Algorithms}
-\term{Nonpreemptive}: current process runs until completion or blocking. \term{Preemptive}: OS can interrupt the running process.\\
+\term[非抢占]{Nonpreemptive}: current process runs until completion or blocking. \term[抢占]{Preemptive}: OS can interrupt the running process.\\
 \begin{stemlist}
-\term{FCFS/FIFO} -- \textbf{Full name}: First-Come-First-Served / First-In-First-Out.\\
+\term[先来先服务]{FCFS/FIFO} -- \textbf{Full name}: First-Come-First-Served / First-In-First-Out.\\
 \textbf{Idea}: nonpreemptive; run the ready process that arrived first or waited longest.\\
 \textbf{Pros}: simplest policy; little overhead; fair by arrival order.\\
 \textbf{Cons}: convoy effect; short or I/O-bound jobs can wait behind one long CPU-bound job.
 
-\term{RR} -- \textbf{Full name}: Round Robin.\\
+\term[轮转/时间片]{RR} -- \textbf{Full name}: Round Robin.\\
 \textbf{Idea}: preemptive; each ready process gets a fixed time quantum \(q\), then goes to the queue tail if unfinished.\\
 \textbf{Pros}: good response time and fairness for time-sharing systems.\\
 \textbf{Cons}: small \(q\) causes many context switches; large \(q\) degenerates toward FCFS.
 
-\term{SPN/SJF} -- \textbf{Full name}: Shortest Process Next / Shortest Job First.\\
+\term[最短作业优先]{SPN/SJF} -- \textbf{Full name}: Shortest Process Next / Shortest Job First.\\
 \textbf{Idea}: nonpreemptive; choose the process with the smallest estimated service time.\\
 \textbf{Pros}: often minimizes average waiting time when jobs arrive together; favors short jobs.\\
 \textbf{Cons}: needs burst-time estimates; long jobs may starve.
 
-\term{SRT} -- \textbf{Full name}: Shortest Remaining Time.\\
+\term[最短剩余时间]{SRT} -- \textbf{Full name}: Shortest Remaining Time.\\
 \textbf{Idea}: preemptive version of SPN; always run the process with the least remaining CPU time.\\
 \textbf{Pros}: very good response for short/new short jobs; low average turnaround in many workloads.\\
 \textbf{Cons}: needs remaining-time estimates; more preemption overhead; long jobs may starve.
 
-\term{HRRN} -- \textbf{Full name}: Highest Response Ratio Next.\\
+\term[最高响应比]{HRRN} -- \textbf{Full name}: Highest Response Ratio Next.\\
 \textbf{Idea}: nonpreemptive; choose largest \(R=(w+s)/s=1+w/s\), where \(w\)=waiting time and \(s\)=service time.\\
 \textbf{Pros}: short jobs score well, and long-waiting jobs age upward; reduces starvation compared with SPN.\\
 \textbf{Cons}: must recompute ratios; still needs service-time estimates.
 
-\term{Feedback} -- \textbf{Full name}: Feedback / Multilevel Feedback Queue.\\
+\term[反馈/多级反馈队列]{Feedback} -- \textbf{Full name}: Feedback / Multilevel Feedback Queue.\\
 \textbf{Idea}: preemptive; new jobs start in high-priority queues, and jobs that use full quanta are demoted.\\
 \textbf{Pros}: no service-time estimate needed; favors short, interactive, and I/O-bound jobs.\\
 \textbf{Cons}: CPU-bound jobs can be pushed down and starve unless aging or longer low-level quanta are used.
@@ -849,34 +873,34 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 
 \cheatsection{10 Multiprocessor, Multicore, Real-Time}
 \cheatsubsection{Multiprocessor Scheduling}
-\term{Tightly coupled multiprocessor}: processors share common main memory and are controlled by one OS.\\
-\term{Granularity}: synchronization frequency. Fine = instruction-level parallelism; medium = cooperating threads in one application; coarse = concurrent processes; very coarse = distributed nodes; independent = unrelated tasks with no explicit synchronization.\\
-\term{Assignment}: static assignment keeps a process on one processor, with low overhead but possible imbalance; dynamic assignment uses a common queue, improving balance but hurting cache locality.\\
-\term{Kernel organization}: master/slave is simple but can bottleneck or fail at the master; peer scheduling scales better but needs stronger synchronization.\\
-\term{Dispatching}: with multiple processors, simple policies such as FCFS may be adequate because one long job need not block all other work.
+\term[紧耦合多处理器]{Tightly coupled multiprocessor}: processors share common main memory and are controlled by one OS.\\
+\term[粒度/同步频率]{Granularity}: synchronization frequency. Fine = instruction-level parallelism; medium = cooperating threads in one application; coarse = concurrent processes; very coarse = distributed nodes; independent = unrelated tasks with no explicit synchronization.\\
+\term[处理器分配]{Assignment}: static assignment keeps a process on one processor, with low overhead but possible imbalance; dynamic assignment uses a common queue, improving balance but hurting cache locality.\\
+\term[内核组织]{Kernel organization}: master/slave is simple but can bottleneck or fail at the master; peer scheduling scales better but needs stronger synchronization.\\
+\term[多处理器派遣]{Dispatching}: with multiple processors, simple policies such as FCFS may be adequate because one long job need not block all other work.
 
 \cheatsubsection{Thread and Core Scheduling}
 \begingroup
 \cheattinyfont
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Technique} & \term{Idea / Pros / Cons}\\
+\term[技术]{Technique} & \term[思路/优缺点]{Idea / Pros / Cons}\\
 \midrule
-\term{Load sharing} & Idea: global queue. Pros: simple, balanced, keeps CPUs busy. Cons: queue contention, cache-affinity loss, related threads separated.\\
-\term{Gang scheduling} & Idea: co-schedule related threads. Pros: less barrier/lock wait, lower communication delay. Cons: needs CPUs, may waste slots, harder with mixed jobs.\\
-\term{Dedicated assignment} & Idea: reserve processors per app. Pros: strong affinity, low dispatch cost, predictable progress. Cons: idle when threads block, poor sharing, bad if thread count varies.\\
-\term{Dynamic scheduling} & Idea: vary thread count and processors at run time. Pros: adapts to load, high utilization, can favor urgent work. Cons: complex policy, migration overhead, less predictable.\\
-\term{Core placement} & Idea: choose cores by cache/memory behavior. Pros: shared-data threads share cache; competitors separated. Cons: needs workload knowledge; may hurt load balance.\\
+\term[负载共享]{Load sharing} & Idea: global queue. Pros: simple, balanced, keeps CPUs busy. Cons: queue contention, cache-affinity loss, related threads separated.\\
+\term[组调度/相关线程同跑]{Gang scheduling} & Idea: co-schedule related threads. Pros: less barrier/lock wait, lower communication delay. Cons: needs CPUs, may waste slots, harder with mixed jobs.\\
+\term[专用分配]{Dedicated assignment} & Idea: reserve processors per app. Pros: strong affinity, low dispatch cost, predictable progress. Cons: idle when threads block, poor sharing, bad if thread count varies.\\
+\term[动态调度]{Dynamic scheduling} & Idea: vary thread count and processors at run time. Pros: adapts to load, high utilization, can favor urgent work. Cons: complex policy, migration overhead, less predictable.\\
+\term[核心放置/亲和性]{Core placement} & Idea: choose cores by cache/memory behavior. Pros: shared-data threads share cache; competitors separated. Cons: needs workload knowledge; may hurt load balance.\\
 \bottomrule
 \end{tabularx}
 \endgroup
-\term{Multicore rule}: co-locate data-sharing threads; separate threads that compete for cache or memory bandwidth.
+\term[多核经验法则]{Multicore rule}: co-locate data-sharing threads; separate threads that compete for cache or memory bandwidth.
 
 \cheatsubsection{Real-Time Basics}
-\term{Hard real-time}: missing a deadline can cause unacceptable damage or fatal failure.\\
-\term{Soft real-time}: deadlines are desirable but not mandatory; late results may still have value.\\
-\term{Periodic task}: occurs repeatedly at regular intervals. \term{Aperiodic task}: has no fixed interval but has a start or finish deadline.\\
-\term{RTOS requirements}: determinism, responsiveness, user control, reliability, and fail-soft operation.
+\term[硬实时/错过不可接受]{Hard real-time}: missing a deadline can cause unacceptable damage or fatal failure.\\
+\term[软实时/迟到仍可用]{Soft real-time}: deadlines are desirable but not mandatory; late results may still have value.\\
+\term[周期任务]{Periodic task}: occurs repeatedly at regular intervals. \term[非周期任务]{Aperiodic task}: has no fixed interval but has a start or finish deadline.\\
+\term[实时OS要求]{RTOS requirements}: determinism, responsiveness, user control, reliability, and fail-soft operation.
 
 \cheatsection{Chapter 10 Review Q\&A}
 \begin{stemlist}
@@ -901,43 +925,43 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 
 \cheatsection{12 File Management}
 \cheatsubsection{Core Model and Organizations}
-\term{File system}: maps named files and logical records onto secondary-storage blocks. Logical hierarchy: field \(\to\) record \(\to\) file \(\to\) database. Users see files/records; devices transfer blocks.\\
-\term{File management system}: OS software for create, delete, open, close, read, write, protect, share, back up, and recover files.\\
-\term{File organization}: logical record layout/access method; choose by access time, update ease, storage economy, maintenance simplicity, and reliability.
+\term[文件系统]{File system}: maps named files and logical records onto secondary-storage blocks. Logical hierarchy: field \(\to\) record \(\to\) file \(\to\) database. Users see files/records; devices transfer blocks.\\
+\term[文件管理系统]{File management system}: OS software for create, delete, open, close, read, write, protect, share, back up, and recover files.\\
+\term[文件组织/逻辑访问]{File organization}: logical record layout/access method; choose by access time, update ease, storage economy, maintenance simplicity, and reliability.
 \begingroup
 \cheattinyfont
 \renewcommand{\arraystretch}{0.68}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.31\linewidth}Y@{}}
-\term{Access method} & top; sequential, indexed, hashed access.\\
-\term{Logical I/O} & record-level operations.\\
-\term{Basic I/O supervisor} & I/O requests, buffers, scheduling.\\
-\term{Basic file system / Physical I/O} & block-level physical I/O.\\
-\term{Device drivers} & lowest; control storage devices.\\
+\term[访问方法层]{Access method} & top; sequential, indexed, hashed access.\\
+\term[逻辑I/O/记录级]{Logical I/O} & record-level operations.\\
+\term[基本I/O管理]{Basic I/O supervisor} & I/O requests, buffers, scheduling.\\
+\term[物理块I/O]{Basic file system / Physical I/O} & block-level physical I/O.\\
+\term[设备驱动]{Device drivers} & lowest; control storage devices.\\
 \end{tabularx}
 \endgroup
-\begin{tabularx}{\linewidth}{@{}lY@{}}
+\begin{tabularx}{\linewidth}{@{}TY@{}}
 \toprule
-\term{Pile} & unordered arrival order; simple append, slow search.\\
-\term{Sequential} & records sorted by key; strong for batch/full scans.\\
-\term{Indexed sequential} & sorted file plus index and overflow; faster lookup and sequential processing.\\
-\term{Indexed} & one or more indexes; flexible random access, index overhead.\\
-\term{Direct/hashed} & hash key to location; fastest exact-key lookup, weaker for ordered scans.\\
+\term[堆文件/追加无序]{Pile} & unordered arrival order; simple append, slow search.\\
+\term[顺序文件/按键排序]{Sequential} & records sorted by key; strong for batch/full scans.\\
+\term[索引顺序文件]{Indexed sequential} & sorted file plus index and overflow; faster lookup and sequential processing.\\
+\term[索引文件/多索引]{Indexed} & one or more indexes; flexible random access, index overhead.\\
+\term[直接/散列文件]{Direct/hashed} & hash key to location; fastest exact-key lookup, weaker for ordered scans.\\
 \bottomrule
 \end{tabularx}
 
 \cheatsubsection{Directories, B-Trees, Blocking}
-\term{Directory}: a file containing file metadata: name/type/org, volume/start/size, owner/access rights, timestamps, open/lock state. Ops: search, create, delete, list, update.\\
-\term{Pathname}: absolute starts at root; relative is interpreted from the working/current directory. Tree directories avoid name conflicts by unique pathnames.\\
-\term{Access rights}: none, knowledge, execution, reading, appending, updating, changing protection, deletion.\\
-\term{B-tree}: balanced multiway search tree; all leaves same depth, broad and shallow. Minimum degree \(d\): max keys \(2d-1\), max children \(2d\), nonroot min keys \(d-1\). On full-node insert, split and promote median.
+\term[目录/文件元数据表]{Directory}: a file containing file metadata: name/type/org, volume/start/size, owner/access rights, timestamps, open/lock state. Ops: search, create, delete, list, update.\\
+\term[路径名/绝对相对]{Pathname}: absolute starts at root; relative is interpreted from the working/current directory. Tree directories avoid name conflicts by unique pathnames.\\
+\term[访问权限]{Access rights}: none, knowledge, execution, reading, appending, updating, changing protection, deletion.\\
+\term[B树/平衡多路索引]{B-tree}: balanced multiway search tree; all leaves same depth, broad and shallow. Minimum degree \(d\): max keys \(2d-1\), max children \(2d\), nonroot min keys \(d-1\). On full-node insert, split and promote median.
 \begingroup
 \cheattinyfont
 \renewcommand{\arraystretch}{0.74}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.34\linewidth}Y@{}}
 \toprule
-\term{Fixed blocking} & Idea: fixed records, integral records/block. Pros: simplest, easy addressing. Cons: internal fragmentation; poor for variable records.\\
-\term{Variable spanned} & Idea: variable records may cross blocks. Pros: best space use; record may exceed block. Cons: complex I/O/update; one record may need two block reads.\\
-\term{Variable unspanned} & Idea: variable records cannot cross blocks. Pros: simpler; one record stays in one block. Cons: leftover waste; record \(\le\) block.\\
+\term[固定分块]{Fixed blocking} & Idea: fixed records, integral records/block. Pros: simplest, easy addressing. Cons: internal fragmentation; poor for variable records.\\
+\term[可变跨块]{Variable spanned} & Idea: variable records may cross blocks. Pros: best space use; record may exceed block. Cons: complex I/O/update; one record may need two block reads.\\
+\term[可变不跨块]{Variable unspanned} & Idea: variable records cannot cross blocks. Pros: simpler; one record stays in one block. Cons: leftover waste; record \(\le\) block.\\
 \bottomrule
 \end{tabularx}
 \endgroup
@@ -948,17 +972,17 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 \renewcommand{\arraystretch}{0.74}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.31\linewidth}Y@{}}
 \toprule
-\term{Contiguous} & Idea: start block + length. Pros: fastest sequential/direct access; tiny metadata. Cons: external fragmentation; hard growth; size often needed early.\\
-\term{Chained} & Idea: each block points to next. Pros: no external fragmentation; easy growth. Cons: slow random access; pointer overhead; poor locality.\\
-\term{Indexed} & Idea: index block lists data blocks. Pros: good random/sequential access; flexible growth. Cons: index overhead; small-file waste; large files need multilevel indexes.\\
+\term[连续分配]{Contiguous} & Idea: start block + length. Pros: fastest sequential/direct access; tiny metadata. Cons: external fragmentation; hard growth; size often needed early.\\
+\term[链接分配]{Chained} & Idea: each block points to next. Pros: no external fragmentation; easy growth. Cons: slow random access; pointer overhead; poor locality.\\
+\term[索引分配]{Indexed} & Idea: index block lists data blocks. Pros: good random/sequential access; flexible growth. Cons: index overhead; small-file waste; large files need multilevel indexes.\\
 \bottomrule
 \end{tabularx}
-\term{Preallocation}: reserve max size early. Pros: simple, may be contiguous/fast. Cons: wastes space; max size hard to know.\\
-\term{Dynamic allocation}: allocate as file grows. Pros: space efficient, flexible. Cons: more metadata; may fragment.\\
-\term{First fit}: first large-enough free portion. Pros: fast. Cons: small holes near front. \term{Best fit}: smallest large-enough portion. Pros: least immediate leftover. Cons: slow search, tiny fragments. \term{Nearest fit}: closest to prior file allocation. Pros: locality. Cons: not space-optimal; needs position state.\\
+\term[预分配]{Preallocation}: reserve max size early. Pros: simple, may be contiguous/fast. Cons: wastes space; max size hard to know.\\
+\term[动态分配]{Dynamic allocation}: allocate as file grows. Pros: space efficient, flexible. Cons: more metadata; may fragment.\\
+\term[首次适配]{First fit}: first large-enough free portion. Pros: fast. Cons: small holes near front. \term[最佳适配]{Best fit}: smallest large-enough portion. Pros: least immediate leftover. Cons: slow search, tiny fragments. \term[邻近适配]{Nearest fit}: closest to prior file allocation. Pros: locality. Cons: not space-optimal; needs position state.\\
 \endgroup
-\term{Free-space management}: bit table/bitmap, chained free portions, indexing, free block list. Bitmap bytes \(=disk\ bytes/(8\times block\ size)\).\\
-\term{Do not confuse}: indexed file = logical file organization; indexed allocation = physical block allocation.
+\term[空闲空间管理]{Free-space management}: bit table/bitmap, chained free portions, indexing, free block list. Bitmap bytes \(=disk\ bytes/(8\times block\ size)\).\\
+\term[易混点]{Do not confuse}: indexed file = logical file organization; indexed allocation = physical block allocation.
 
 \cheatsection{Chapter 12 Review Q\&A}
 \begin{stemlist}
