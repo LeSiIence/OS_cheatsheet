@@ -1,0 +1,11 @@
+# Ignore everything by default.
+*
+
+# Keep walking directories so allowed files can be discovered.
+!*/
+
+# Track only source notes, TeX files, PDFs, and this ignore file.
+!*.tex
+!*.md
+!*.pdf
+!.gitignore
