@@ -771,16 +771,37 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
 
 \cheatsubsection{Decision Modes and Algorithms}
 \term{Nonpreemptive}: current process runs until completion or blocking. \term{Preemptive}: OS can interrupt the running process.\\
-\begin{tabularx}{\linewidth}{@{}lY@{}}
-\toprule
-\term{FCFS/FIFO} & nonpreemptive; oldest ready job first; simple, but convoy effect hurts short and I/O-bound jobs.\\
-\term{RR} & preemptive; each process gets a time quantum; too small means high overhead, too large becomes FCFS.\\
-\term{SPN/SJF} & nonpreemptive; shortest expected service next; low mean wait, but long jobs may starve.\\
-\term{SRT} & preemptive SPN; always run the job with least remaining time.\\
-\term{HRRN} & nonpreemptive; choose max \(R=(w+s)/s=1+w/s\); favors short jobs and old jobs.\\
-\term{Feedback} & multilevel queues; new jobs start high, CPU-heavy jobs are demoted; I/O-bound jobs are favored.\\
-\bottomrule
-\end{tabularx}
+\begin{stemlist}
+\term{FCFS/FIFO} -- \textbf{Full name}: First-Come-First-Served / First-In-First-Out.\\
+\textbf{Idea}: nonpreemptive; run the ready process that arrived first or waited longest.\\
+\textbf{Pros}: simplest policy; little overhead; fair by arrival order.\\
+\textbf{Cons}: convoy effect; short or I/O-bound jobs can wait behind one long CPU-bound job.
+
+\term{RR} -- \textbf{Full name}: Round Robin.\\
+\textbf{Idea}: preemptive; each ready process gets a fixed time quantum \(q\), then goes to the queue tail if unfinished.\\
+\textbf{Pros}: good response time and fairness for time-sharing systems.\\
+\textbf{Cons}: small \(q\) causes many context switches; large \(q\) degenerates toward FCFS.
+
+\term{SPN/SJF} -- \textbf{Full name}: Shortest Process Next / Shortest Job First.\\
+\textbf{Idea}: nonpreemptive; choose the process with the smallest estimated service time.\\
+\textbf{Pros}: often minimizes average waiting time when jobs arrive together; favors short jobs.\\
+\textbf{Cons}: needs burst-time estimates; long jobs may starve.
+
+\term{SRT} -- \textbf{Full name}: Shortest Remaining Time.\\
+\textbf{Idea}: preemptive version of SPN; always run the process with the least remaining CPU time.\\
+\textbf{Pros}: very good response for short/new short jobs; low average turnaround in many workloads.\\
+\textbf{Cons}: needs remaining-time estimates; more preemption overhead; long jobs may starve.
+
+\term{HRRN} -- \textbf{Full name}: Highest Response Ratio Next.\\
+\textbf{Idea}: nonpreemptive; choose largest \(R=(w+s)/s=1+w/s\), where \(w\)=waiting time and \(s\)=service time.\\
+\textbf{Pros}: short jobs score well, and long-waiting jobs age upward; reduces starvation compared with SPN.\\
+\textbf{Cons}: must recompute ratios; still needs service-time estimates.
+
+\term{Feedback} -- \textbf{Full name}: Feedback / Multilevel Feedback Queue.\\
+\textbf{Idea}: preemptive; new jobs start in high-priority queues, and jobs that use full quanta are demoted.\\
+\textbf{Pros}: no service-time estimate needed; favors short, interactive, and I/O-bound jobs.\\
+\textbf{Cons}: CPU-bound jobs can be pushed down and starve unless aging or longer low-level quanta are used.
+\end{stemlist}
 
 \cheatsection{Chapter 9 Review Q\&A}
 \begin{stemlist}
@@ -825,6 +846,151 @@ T_r=finish-arrival,\qquad NTT=\frac{T_r}{T_s}
   \item SPN/SRT improve average wait for short jobs but need burst estimates and may starve long jobs.
   \item HRRN adds aging through \(1+w/s\); feedback favors short and I/O-bound processes without knowing burst length.
 \end{itemize}
+
+\cheatsection{10 Multiprocessor, Multicore, Real-Time}
+\cheatsubsection{Multiprocessor Scheduling}
+\term{Tightly coupled multiprocessor}: processors share common main memory and are controlled by one OS.\\
+\term{Granularity}: synchronization frequency. Fine = instruction-level parallelism; medium = cooperating threads in one application; coarse = concurrent processes; very coarse = distributed nodes; independent = unrelated tasks with no explicit synchronization.\\
+\term{Assignment}: static assignment keeps a process on one processor, with low overhead but possible imbalance; dynamic assignment uses a common queue, improving balance but hurting cache locality.\\
+\term{Kernel organization}: master/slave is simple but can bottleneck or fail at the master; peer scheduling scales better but needs stronger synchronization.\\
+\term{Dispatching}: with multiple processors, simple policies such as FCFS may be adequate because one long job need not block all other work.
+
+\cheatsubsection{Thread and Core Scheduling}
+\begingroup
+\cheattinyfont
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Technique} & \term{Idea / Pros / Cons}\\
+\midrule
+\term{Load sharing} & Idea: global queue. Pros: simple, balanced, keeps CPUs busy. Cons: queue contention, cache-affinity loss, related threads separated.\\
+\term{Gang scheduling} & Idea: co-schedule related threads. Pros: less barrier/lock wait, lower communication delay. Cons: needs CPUs, may waste slots, harder with mixed jobs.\\
+\term{Dedicated assignment} & Idea: reserve processors per app. Pros: strong affinity, low dispatch cost, predictable progress. Cons: idle when threads block, poor sharing, bad if thread count varies.\\
+\term{Dynamic scheduling} & Idea: vary thread count and processors at run time. Pros: adapts to load, high utilization, can favor urgent work. Cons: complex policy, migration overhead, less predictable.\\
+\term{Core placement} & Idea: choose cores by cache/memory behavior. Pros: shared-data threads share cache; competitors separated. Cons: needs workload knowledge; may hurt load balance.\\
+\bottomrule
+\end{tabularx}
+\endgroup
+\term{Multicore rule}: co-locate data-sharing threads; separate threads that compete for cache or memory bandwidth.
+
+\cheatsubsection{Real-Time Basics}
+\term{Hard real-time}: missing a deadline can cause unacceptable damage or fatal failure.\\
+\term{Soft real-time}: deadlines are desirable but not mandatory; late results may still have value.\\
+\term{Periodic task}: occurs repeatedly at regular intervals. \term{Aperiodic task}: has no fixed interval but has a start or finish deadline.\\
+\term{RTOS requirements}: determinism, responsiveness, user control, reliability, and fail-soft operation.
+
+\cheatsection{Chapter 10 Review Q\&A}
+\begin{stemlist}
+\stemrow{R10.1 Granularity}{Stem: five synchronization granularities. A: fine, medium, coarse, very coarse, and independent parallelism; finer granularity means more frequent synchronization.}
+\stemrow{R10.2 Thread scheduling}{Stem: four thread-scheduling techniques. A: load sharing, gang scheduling, dedicated processor assignment, and dynamic scheduling.}
+\stemrow{R10.3 Load sharing versions}{Stem: three load-sharing versions. A: FCFS shared queue; smallest number of threads first; preemptive smallest number of threads first.}
+\stemrow{R10.4 Hard vs soft RT}{Stem: hard vs soft real-time tasks. A: hard tasks must meet deadlines; soft tasks prefer deadlines but late completion can still be useful.}
+\stemrow{R10.5 Periodic vs aperiodic}{Stem: periodic vs aperiodic tasks. A: periodic tasks recur every period \(T\); aperiodic tasks arrive irregularly but still have timing constraints.}
+\stemrow{R10.6 RTOS requirements}{Stem: five RTOS requirement areas. A: deterministic behavior, fast response, user control over priorities/resources, high reliability, and graceful fail-soft degradation.}
+\stemrow{R10.7 RT algorithms}{Stem: four real-time scheduling classes. A: static table-driven, static priority-driven preemptive, dynamic planning-based, and dynamic best-effort scheduling.}
+\stemrow{R10.8 Task data}{Stem: task information useful for real-time scheduling. A: ready time, starting/completion deadline, processing time, resource needs, priority, periodicity, and subtask/dependency structure.}
+\end{stemlist}
+
+\cheatsection{Chapter 10 Fast Recall}
+\begin{itemize}
+  \item Static assignment favors affinity; dynamic assignment favors load balance.
+  \item Load sharing is simple but can lose cache affinity and separate cooperating threads.
+  \item Gang scheduling is best when related threads synchronize often.
+  \item Dedicated assignment reduces switching but may waste processors when threads block.
+  \item Multicore scheduling balances load, shared-cache benefit, and resource contention.
+\end{itemize}
+
+\cheatsection{12 File Management}
+\cheatsubsection{Core Model and Organizations}
+\term{File system}: maps named files and logical records onto secondary-storage blocks. Logical hierarchy: field \(\to\) record \(\to\) file \(\to\) database. Users see files/records; devices transfer blocks.\\
+\term{File management system}: OS software for create, delete, open, close, read, write, protect, share, back up, and recover files.\\
+\term{File organization}: logical record layout/access method; choose by access time, update ease, storage economy, maintenance simplicity, and reliability.
+\begingroup
+\cheattinyfont
+\renewcommand{\arraystretch}{0.68}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.31\linewidth}Y@{}}
+\term{Access method} & top; sequential, indexed, hashed access.\\
+\term{Logical I/O} & record-level operations.\\
+\term{Basic I/O supervisor} & I/O requests, buffers, scheduling.\\
+\term{Basic file system / Physical I/O} & block-level physical I/O.\\
+\term{Device drivers} & lowest; control storage devices.\\
+\end{tabularx}
+\endgroup
+\begin{tabularx}{\linewidth}{@{}lY@{}}
+\toprule
+\term{Pile} & unordered arrival order; simple append, slow search.\\
+\term{Sequential} & records sorted by key; strong for batch/full scans.\\
+\term{Indexed sequential} & sorted file plus index and overflow; faster lookup and sequential processing.\\
+\term{Indexed} & one or more indexes; flexible random access, index overhead.\\
+\term{Direct/hashed} & hash key to location; fastest exact-key lookup, weaker for ordered scans.\\
+\bottomrule
+\end{tabularx}
+
+\cheatsubsection{Directories, B-Trees, Blocking}
+\term{Directory}: a file containing file metadata: name/type/org, volume/start/size, owner/access rights, timestamps, open/lock state. Ops: search, create, delete, list, update.\\
+\term{Pathname}: absolute starts at root; relative is interpreted from the working/current directory. Tree directories avoid name conflicts by unique pathnames.\\
+\term{Access rights}: none, knowledge, execution, reading, appending, updating, changing protection, deletion.\\
+\term{B-tree}: balanced multiway search tree; all leaves same depth, broad and shallow. Minimum degree \(d\): max keys \(2d-1\), max children \(2d\), nonroot min keys \(d-1\). On full-node insert, split and promote median.
+\begingroup
+\cheattinyfont
+\renewcommand{\arraystretch}{0.74}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.34\linewidth}Y@{}}
+\toprule
+\term{Fixed blocking} & Idea: fixed records, integral records/block. Pros: simplest, easy addressing. Cons: internal fragmentation; poor for variable records.\\
+\term{Variable spanned} & Idea: variable records may cross blocks. Pros: best space use; record may exceed block. Cons: complex I/O/update; one record may need two block reads.\\
+\term{Variable unspanned} & Idea: variable records cannot cross blocks. Pros: simpler; one record stays in one block. Cons: leftover waste; record \(\le\) block.\\
+\bottomrule
+\end{tabularx}
+\endgroup
+
+\cheatsubsection{Allocation and Free Space}
+\begingroup
+\cheattinyfont
+\renewcommand{\arraystretch}{0.74}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.31\linewidth}Y@{}}
+\toprule
+\term{Contiguous} & Idea: start block + length. Pros: fastest sequential/direct access; tiny metadata. Cons: external fragmentation; hard growth; size often needed early.\\
+\term{Chained} & Idea: each block points to next. Pros: no external fragmentation; easy growth. Cons: slow random access; pointer overhead; poor locality.\\
+\term{Indexed} & Idea: index block lists data blocks. Pros: good random/sequential access; flexible growth. Cons: index overhead; small-file waste; large files need multilevel indexes.\\
+\bottomrule
+\end{tabularx}
+\term{Preallocation}: reserve max size early. Pros: simple, may be contiguous/fast. Cons: wastes space; max size hard to know.\\
+\term{Dynamic allocation}: allocate as file grows. Pros: space efficient, flexible. Cons: more metadata; may fragment.\\
+\term{First fit}: first large-enough free portion. Pros: fast. Cons: small holes near front. \term{Best fit}: smallest large-enough portion. Pros: least immediate leftover. Cons: slow search, tiny fragments. \term{Nearest fit}: closest to prior file allocation. Pros: locality. Cons: not space-optimal; needs position state.\\
+\endgroup
+\term{Free-space management}: bit table/bitmap, chained free portions, indexing, free block list. Bitmap bytes \(=disk\ bytes/(8\times block\ size)\).\\
+\term{Do not confuse}: indexed file = logical file organization; indexed allocation = physical block allocation.
+
+\cheatsection{Chapter 12 Review Q\&A}
+\begin{stemlist}
+\stemrow{R12.1 Field/record}{Stem: difference. A: a field is one data item; a record is related fields treated as one unit.}
+\stemrow{R12.2 File/database}{Stem: difference. A: a file is similar records; a database is related data, often several files with explicit relationships.}
+\stemrow{R12.3 FMS}{Stem: define file management system. A: OS software that provides file creation, deletion, access, modification, protection, sharing, backup, and recovery.}
+\stemrow{R12.4 Organization criteria}{Stem: choosing file organization. A: short access time, ease of update, storage economy, simple maintenance, and reliability.}
+\stemrow{R12.5 Five organizations}{Stem: list and define. A: pile = arrival/full scan; sequential = key-sorted/batch; indexed sequential = index+overflow/faster lookup; indexed = multiple indexes/fields; direct/hashed = hash key to location.}
+\stemrow{R12.6 Indexed sequential search}{Stem: why faster than sequential. A: the index jumps near the target, so only a small local sequential search remains.}
+\stemrow{R12.7 Directory ops}{Stem: typical operations. A: search, create file, delete file, list directory, and update directory.}
+\stemrow{R12.8 Path/working dir}{Stem: relationship. A: a relative pathname is resolved from the working directory; an absolute pathname starts at root.}
+\stemrow{R12.9 Access rights}{Stem: typical rights. A: none, knowledge, execution, reading, appending, updating, changing protection, deletion.}
+\stemrow{R12.10 Blocking}{Stem: three methods. A: fixed; variable-length spanned; variable-length unspanned.}
+\stemrow{R12.11 Allocation}{Stem: three methods. A: contiguous, chained, and indexed file allocation.}
+\end{stemlist}
+
+\cheatsection{Chapter 12 Problem Q\&A}
+\begin{stemlist}
+\stemrow{P12.1 Blocking factor}{Stem: \(B,R,P\)=block/record/pointer sizes; \(F\)=blocking factor. A: fixed/unspanned \(F\approx\lfloor B/R\rfloor\); spanned \(F\approx(B-P)/R\).}
+\stemrow{P12.2 Growing portions}{Stem: portions \(1,2,4,\ldots\), \(n\) records, blocking factor \(F\). A: let \(m=\lceil n/F\rceil\) blocks; FAT entries \(\le\lceil\log_2(m+1)\rceil\); just after a new portion, unused space is at most that portion minus one block/record unit, less than half allocated.}
+\stemrow{P12.3 Choose organization}{Stem: choose org for speed/storage/update: (a) infrequent update + frequent random access; (b) frequent update + frequent whole-file access; (c) frequent update + frequent random access. A: (a) direct/hashed, or indexed for multiple keys; (b) indexed sequential; (c) indexed, or hashed for one exact key.}
+\stemrow{P12.4 Insert 97}{Stem: B-tree insert. A: insert into full right leaf, split \([73,85,88,90,96,97]\) at 88; root also full, split at 51; new root \([51]\), right child includes \([61,71,88]\).}
+\stemrow{P12.5 Top-down split}{Stem: split every full node while descending. A: advantage: no backtracking and simpler one-pass insertion; disadvantages: unnecessary splits, extra writes, lower occupancy, possible earlier height growth.}
+\stemrow{P12.6 B-tree height}{Stem: upper bound on height. A: worst case has minimum occupancy, so \(n\ge2d^h-1\) and \(h\le\log_d((n+1)/2)\), with root-to-leaf edge height.}
+\stemrow{P12.7 Last-block waste}{Stem: 16K blocks; \(S=41{,}600;640{,}000;4{,}064{,}000\). A: \(A=\lceil S/16K\rceil16K\), \(W\%=(A-S)/A\); \(15.36\%,2.34\%,0.383\%\).}
+\stemrow{P12.8 Directory benefits}{Stem: advantages. A: symbolic names, name-to-location mapping, hierarchy, fewer name conflicts, access control, easier search/list/update.}
+\stemrow{P12.9 Directory file type}{Stem: special file vs ordinary file. A: special protects format/integrity but is less flexible; ordinary gives uniform tools but risks corruption unless strongly protected.}
+\stemrow{P12.10 Limited depth}{Stem: effect of shallow tree. A: users lose deep organization and long paths; OS gains simpler pathname parsing, bounded buffers/tables, and less recursive traversal.}
+\stemrow{P12.11 Lost free pointer}{Stem: hierarchical FS keeps free disk space in a free-space list: (a) if pointer to free space is lost, can system reconstruct the list? (b) scheme so pointer is never lost from one memory failure. A: scan directories/FAT/inodes, mark allocated blocks, rebuild unmarked free blocks; store redundant logged/checksummed pointer copies in stable storage.}
+\stemrow{P12.12 UNIX V max file}{Stem: In UNIX System V, block length is 1 KB and each block holds 256 block addresses; using the inode scheme, find the maximum file size. A: with 10 direct plus single/double/triple indirect, max \(=(10+256+256^2+256^3)\times1024=17{,}247{,}250{,}432\) bytes, about 16.06 GiB.}
+\stemrow{P12.13 8K inode}{Stem: UNIX inode: 12 direct pointers plus single/double/triple indirect; block=sector=8K; 32-bit disk pointer = 8-bit disk ID + 24-bit block ID. Find (a) max file size, (b) max partition size, (c) disk accesses for byte 13,423,956 when inode is already in memory. A: pointers/block \(=2048\); max file \(=(12+2048+2048^2+2048^3)8K=70{,}403{,}120{,}791{,}552\) bytes. Partition limit is 128 GiB per 24-bit block field per disk, or 32 TiB using all 8 disk bits. Byte 13,423,956 is in the single-indirect range, so read indirect block + data block = 2 disk accesses.}
+\end{stemlist}
 
 \end{multicols*}
 
